@@ -11,11 +11,16 @@ import { createScopedEventHandlers } from '../../core-modules/common/eventHandle
 import { setEventHandlerRuntimeContext } from '../../core-modules/common/eventHandlers/runtimeContext';
 import { checkPermissionGroup } from '../../core-modules/permissions/utils';
 
+type InitialApolloContext = Omit<IMainContext, 'models'> & {
+  models?: IMainContext['models'];
+  subdomain: string;
+};
+
 export const generateApolloContext =
   <TContext>(
     apolloServerContext: (
       subdomain: string,
-      context: IMainContext,
+      context: InitialApolloContext,
       req: ApiRequest,
       res: ApiResponse,
     ) => Promise<TContext>,
