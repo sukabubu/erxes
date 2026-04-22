@@ -12,7 +12,7 @@ export const ImportIndexPage = () => {
             <Breadcrumb.List className="gap-1">
               <Breadcrumb.Item>
                 <Button variant="ghost" asChild>
-                  <Link to="/import-export/import">Imports</Link>
+                  <Link to="/import-export/import">导入记录</Link>
                 </Button>
               </Breadcrumb.Item>
             </Breadcrumb.List>

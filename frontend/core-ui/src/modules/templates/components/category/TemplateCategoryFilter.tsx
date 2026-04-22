@@ -97,15 +97,15 @@ const TemplateCategoryFilterBar = ({
       </Filter.BarItem>
 
       {createdBy && (
-        <SelectMember.FilterBar queryKey="createdBy" label="Created By" />
+        <SelectMember.FilterBar queryKey="createdBy" label={t('created-by')} />
       )}
 
       {updatedBy && (
-        <SelectMember.FilterBar queryKey="updatedBy" label="Updated By" />
+        <SelectMember.FilterBar queryKey="updatedBy" label={t('updated-by')} />
       )}
 
       {parentIds && (
-        <SelectTemplateCategory.FilterBar queryKey="parentIds" label="Parent" />
+        <SelectTemplateCategory.FilterBar queryKey="parentIds" label={t('parent')} />
       )}
     </>
   );
@@ -121,7 +121,7 @@ const TemplateCategoryFilterView = () => {
       <Filter.View>
         <Command>
           <Filter.CommandInput
-            placeholder="Filter"
+            placeholder={t('search-placeholder')}
             variant="secondary"
             className="bg-background"
           />
@@ -133,11 +133,11 @@ const TemplateCategoryFilterView = () => {
 
             <SelectTemplateCategory.FilterItem
               value="parentIds"
-              label="Parent"
+              label={t('parent')}
             />
 
-            <SelectMember.FilterItem value="createdBy" label="Created By" />
-            <SelectMember.FilterItem value="updatedBy" label="Updated By" />
+            <SelectMember.FilterItem value="createdBy" label={t('created-by')} />
+            <SelectMember.FilterItem value="updatedBy" label={t('updated-by')} />
 
             <Command.Separator className="my-1" />
 

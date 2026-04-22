@@ -163,6 +163,50 @@ pnpm nx affected:build
 pnpm nx affected:test
 ```
 
+### China Leads Plugin
+
+This workspace now includes a custom plugin pair for China social lead capture:
+
+- Backend: `backend/plugins/china_leads_api`
+- Frontend: `frontend/plugins/china_leads_ui`
+
+To enable it locally, include `china_leads` in `ENABLED_PLUGINS` and point it at a running `xiansuodouyin` executor service:
+
+```bash
+ENABLED_PLUGINS=operation,sales,frontline,china_leads
+CHINA_LEADS_EXECUTOR_URL=http://127.0.0.1:4318
+```
+
+Then start the stack:
+
+```bash
+pnpm dev:apis
+pnpm dev:uis
+```
+
+The plugin is intended to manage:
+
+- lead capture rule sets
+- scraping jobs
+- scraped comment items
+- syncing captured leads into erxes contacts and deals
+
+For direct backend testing:
+
+- GraphQL management queries and mutations require a logged-in erxes user session
+- tRPC requests require the `x-trpc-context` header used by erxes internal service calls
+
+Example tRPC context header payload before base64 encoding:
+
+```json
+{
+  "subdomain": "localhost",
+  "method": "query",
+  "userId": "<erxes-user-id>",
+  "processId": "debug-process"
+}
+```
+
 ## Technology Stack
 
 | Layer | Technologies |
@@ -255,6 +299,4 @@ See the <a href="https://github.com/erxes/erxes/blob/master/LICENSE.md" >**LICEN
 
 docker compose up -d
 open http://localhost:3000
-
-
 

@@ -1,0 +1,10 @@
+{
+  "settings": "设置",
+  "change-theme": "切换主题",
+  "change-language": "切换语言",
+  "logout": "退出登录",
+  "dark": "深色",
+  "light": "浅色",
+  "system": "跟随系统",
+  "version": "版本"
+}

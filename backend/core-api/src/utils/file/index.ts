@@ -1,10 +1,15 @@
-import { fileTypeFromBuffer } from 'file-type/core';
 import * as fs from 'fs';
 import { Jimp } from 'jimp';
 import { tmpdir } from 'os';
 import * as path from 'path';
 import { IModels } from '~/connectionResolvers';
 import { getConfig } from '~/modules/organization/settings/utils/configs';
+
+const detectFileTypeFromBuffer = async (buffer: Buffer) => {
+  const { fileTypeFromBuffer } = await import('file-type/core');
+
+  return fileTypeFromBuffer(buffer);
+};
 
 export * from './delete';
 export * from './instance';
@@ -68,7 +73,7 @@ export const checkFile = async (
   const buffer = await fs.promises.readFile(file.filepath);
 
   // determine file type using magic numbers
-  const ft = await fileTypeFromBuffer(buffer);
+  const ft = await detectFileTypeFromBuffer(buffer);
   const unsupportedMimeTypes = [
     'text/csv',
     'image/svg+xml',

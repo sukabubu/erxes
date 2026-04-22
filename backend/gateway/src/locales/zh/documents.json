@@ -1,0 +1,16 @@
+{
+  "documents": "文档",
+  "document-types": "文档类型",
+  "customer": "客户",
+  "company": "公司",
+  "product": "产品",
+  "team-member": "团队成员",
+  "add-document": "新增文档",
+  "no-document-title": "暂无文档",
+  "no-document-description": "从创建第一份文档开始。",
+  "filter": {
+    "search": "搜索",
+    "created-at": "创建时间",
+    "assigned-to": "负责人"
+  }
+}

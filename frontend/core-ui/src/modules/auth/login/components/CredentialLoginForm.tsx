@@ -2,10 +2,12 @@ import { Button, Form, Input } from 'erxes-ui';
 import { useLogin } from '@/auth/login/hooks/useLogin';
 import { useSignInUpForm } from '@/auth/login/hooks/useLoginForm';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 export const CredentialLoginForm = () => {
   const { form } = useSignInUpForm();
   const { handleCrendentialsLogin } = useLogin();
+  const { t } = useTranslation('common');
 
   return (
     <Form {...form}>
@@ -19,13 +21,13 @@ export const CredentialLoginForm = () => {
           render={({ field }) => (
             <Form.Item>
               <Form.Label className="font-sans normal-case text-foreground text-sm font-medium leading-none">
-                Email or Username
+                {t('auth.email-or-username')}
               </Form.Label>
               <Form.Control>
                 <Input
                   autoFocus
                   type="text"
-                  placeholder="Enter your work email or username"
+                  placeholder={t('auth.enter-email-or-username')}
                   {...field}
                 />
               </Form.Control>
@@ -38,12 +40,12 @@ export const CredentialLoginForm = () => {
           render={({ field }) => (
             <Form.Item>
               <Form.Label className="font-sans normal-case text-foreground text-sm font-medium leading-none">
-                Password
+                {t('auth.password')}
               </Form.Label>
               <Form.Control>
                 <Input
                   type="password"
-                  placeholder="Enter your password"
+                  placeholder={t('auth.enter-password')}
                   {...field}
                 />
               </Form.Control>
@@ -52,7 +54,7 @@ export const CredentialLoginForm = () => {
           )}
         />
         <Button type="submit" className="h-8">
-          Sign in
+          {t('auth.sign-in')}
         </Button>
 
         <Button
@@ -69,7 +71,7 @@ export const CredentialLoginForm = () => {
               }`;
             })()}
           >
-            Forgot password?
+            {t('auth.forgot-password')}
           </Link>
         </Button>
       </form>

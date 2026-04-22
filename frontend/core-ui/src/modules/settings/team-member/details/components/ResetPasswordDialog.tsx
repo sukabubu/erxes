@@ -1,6 +1,7 @@
 import { useUserResetPassword } from '@/settings/team-member/hooks/useUserResetPassword';
 import { USER_RESET_PASSWORD_SCHEMA } from '@/settings/team-member/schema/users';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useTranslation } from 'react-i18next';
 import {
   Button,
   Dialog,
@@ -20,6 +21,7 @@ export const ResetPasswordDialog = () => {
   const { resetPassword, loading } = useUserResetPassword();
   const [open, setOpen] = useQueryState<string>('reset_password_id');
   const { goBackToPreviousHotkeyScope } = usePreviousHotkeyScope();
+  const { t } = useTranslation('settings');
   const form = useForm<TResetPasswordForm>({
     mode: 'onBlur',
     defaultValues: {
@@ -47,7 +49,7 @@ export const ResetPasswordDialog = () => {
           toast({ title: error.message, variant: 'destructive' }),
         onCompleted: () => {
           toast({
-            title: "This user's password has been changed",
+            title: t('team-member.reset-password-success'),
             variant: 'success',
           });
           reset();
@@ -68,8 +70,8 @@ export const ResetPasswordDialog = () => {
     >
       <Dialog.Content>
         <Dialog.HeaderCombined
-          title="Reset password"
-          description="Set new password for the user"
+          title={t('team-member.reset-password-title')}
+          description={t('team-member.reset-password-description')}
         />
         <Form {...form}>
           <form onSubmit={handleSubmit(onSubmit)}>
@@ -78,15 +80,15 @@ export const ResetPasswordDialog = () => {
                 control={control}
                 name="newPassword"
                 render={({ field }) => (
-                  <Form.Item>
-                    <Form.Label>New password</Form.Label>
-                    <Form.Control>
-                      <Input
-                        type={'password'}
-                        {...field}
-                        placeholder="New password"
-                        autoComplete={'new-password'}
-                      />
+                    <Form.Item>
+                      <Form.Label>{t('change-password.new-password')}</Form.Label>
+                      <Form.Control>
+                        <Input
+                          type={'password'}
+                          {...field}
+                          placeholder={t('change-password.new-password')}
+                          autoComplete={'new-password'}
+                        />
                     </Form.Control>
                     <Form.Message />
                   </Form.Item>
@@ -96,15 +98,15 @@ export const ResetPasswordDialog = () => {
                 control={control}
                 name="repeatPassword"
                 render={({ field }) => (
-                  <Form.Item>
-                    <Form.Label>Re-type password</Form.Label>
-                    <Form.Control>
-                      <Input
-                        type={'password'}
-                        {...field}
-                        placeholder="Re-type password"
-                        autoComplete={'new-password webauthn'}
-                      />
+                    <Form.Item>
+                      <Form.Label>{t('team-member.retype-password')}</Form.Label>
+                      <Form.Control>
+                        <Input
+                          type={'password'}
+                          {...field}
+                          placeholder={t('team-member.retype-password')}
+                          autoComplete={'new-password webauthn'}
+                        />
                     </Form.Control>
                     <Form.Message />
                   </Form.Item>
@@ -121,7 +123,7 @@ export const ResetPasswordDialog = () => {
                   newPassword !== repeatPassword
                 }
               >
-                {loading ? <Spinner /> : 'Save'}
+                {loading ? <Spinner /> : t('change-password.save')}
               </Button>
             </div>
           </form>

@@ -147,7 +147,7 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
         onSubmit={form.handleSubmit(onSubmit, (errors) => {
           toast({
             variant: 'destructive',
-            title: 'Error',
+            title: '错误',
             description: Object.entries(errors)[0][1].message,
           });
         })}
@@ -174,7 +174,7 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
             )}
           />
           <IconChevronRight className="size-4" />
-          <Sheet.Title className="">New task</Sheet.Title>
+          <Sheet.Title className="">新建任务</Sheet.Title>
           <div className="ml-auto">
             <SelectTemplate
               teamId={_teamId}
@@ -193,7 +193,7 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
                   <Input
                     {...field}
                     className="shadow-none focus-visible:shadow-none h-8 text-xl p-0"
-                    placeholder="Task Name"
+                    placeholder="任务名称"
                   />
                 </Form.Control>
               </Form.Item>
@@ -316,11 +316,11 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
               render={({ field }) => (
                 <Form.Item>
                   <Form.Label className="sr-only">Start Date</Form.Label>
-                  <DateSelectTask.FormItem
-                    value={field.value}
-                    placeholder="Start Date"
-                    onValueChange={(value) => field.onChange(value)}
-                  />
+                    <DateSelectTask.FormItem
+                      value={field.value}
+                      placeholder="开始日期"
+                      onValueChange={(value) => field.onChange(value)}
+                    />
                 </Form.Item>
               )}
             />
@@ -330,11 +330,11 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
               render={({ field }) => (
                 <Form.Item>
                   <Form.Label className="sr-only">Target Date</Form.Label>
-                  <DateSelectTask.FormItem
-                    value={field.value}
-                    onValueChange={(value) => field.onChange(value)}
-                    placeholder="Target Date"
-                  />
+                    <DateSelectTask.FormItem
+                      value={field.value}
+                      onValueChange={(value) => field.onChange(value)}
+                      placeholder="目标日期"
+                    />
                 </Form.Item>
               )}
             />
@@ -376,7 +376,7 @@ export const AddTaskForm = ({ onClose }: { onClose: () => void }) => {
               setDescriptionContent(undefined);
             }}
           >
-            Cancel
+            取消
           </Button>
           <Button
             type="submit"

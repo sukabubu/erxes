@@ -80,7 +80,7 @@ function TeamItem({ team }: TeamItemProps) {
             <Sidebar.Menu>
               {team.triageEnabled && (
                 <NavigationMenuLinkItem
-                  name="Triage"
+                  name="分诊"
                   pathPrefix="operation/team"
                   path={`${team._id}/triage`}
                   className="pl-6 font-medium"
@@ -88,14 +88,14 @@ function TeamItem({ team }: TeamItemProps) {
                 />
               )}
               <NavigationMenuLinkItem
-                name="Projects"
+                name="项目"
                 pathPrefix="operation/team"
                 className="pl-6 font-medium"
                 icon={IconClipboard}
                 path={`${team._id}/projects`}
               />
               <NavigationMenuLinkItem
-                name="Tasks"
+                name="任务"
                 pathPrefix="operation/team"
                 path={`${team._id}/tasks`}
                 className="pl-6 font-medium"
@@ -103,7 +103,7 @@ function TeamItem({ team }: TeamItemProps) {
               />
               {team.cycleEnabled && (
                 <NavigationMenuLinkItem
-                  name="Cycles"
+                  name="周期"
                   pathPrefix="operation/team"
                   path={`${team._id}/cycles`}
                   className="pl-6 font-medium"
@@ -125,7 +125,7 @@ export function TeamsNavigation() {
   });
 
   return (
-    <NavigationMenuGroup name="Your Teams">
+    <NavigationMenuGroup name="你的团队">
       {loading ? (
         <LoadingSkeleton />
       ) : (
@@ -142,19 +142,19 @@ const TeamActionsMenu = ({ team }: { team: Team }) => {
 
   const handleCopyLink = async () => {
     const teamLink = `${window.location.origin}/operation/team/${team._id}/tasks`;
-    try {
-      await navigator.clipboard.writeText(teamLink);
-      toast({
-        variant: 'default',
-        title: 'Link copied to clipboard',
-      });
-    } catch (e) {
-      toast({
-        variant: 'destructive',
-        title: 'Failed to copy link',
-        description: e as string,
-      });
-    }
+      try {
+        await navigator.clipboard.writeText(teamLink);
+        toast({
+          variant: 'default',
+          title: '链接已复制到剪贴板',
+        });
+      } catch (e) {
+        toast({
+          variant: 'destructive',
+          title: '复制链接失败',
+          description: e as string,
+        });
+      }
   };
 
   return (
@@ -179,7 +179,7 @@ const TeamActionsMenu = ({ team }: { team: Team }) => {
           }}
         >
           <IconSettings className="size-4" />
-          Go to team settings
+          前往团队设置
         </DropdownMenu.Item>
         <DropdownMenu.Item
           onSelect={(e) => {
@@ -188,7 +188,7 @@ const TeamActionsMenu = ({ team }: { team: Team }) => {
           className="cursor-pointer"
         >
           <IconLink className="size-4" />
-          Copy link
+          复制链接
         </DropdownMenu.Item>
 
         {/* <DropdownMenu.Item className="cursor-pointer">

@@ -74,7 +74,7 @@ const SelectPriorityBadgeValue = ({
   if (!value) {
     return (
       <span className="text-accent-foreground/80">
-        {placeholder || 'Select priority'}
+        {placeholder || '选择优先级'}
       </span>
     );
   }
@@ -113,8 +113,8 @@ const SelectPriorityCommandItem = ({ priority }: { priority: number }) => {
 const SelectPriorityContent = () => {
   return (
     <Command>
-      <Command.Input placeholder="Search priority" />
-      <Command.Empty>No priority found</Command.Empty>
+      <Command.Input placeholder="搜索优先级" />
+      <Command.Empty>未找到优先级</Command.Empty>
       <Command.List>
         {PROJECT_PRIORITIES_OPTIONS.map((priority, index) => (
           <SelectPriorityCommandItem key={priority} priority={index} />

@@ -79,20 +79,20 @@ export const TemplateForm = ({
     if (template) {
       editMutation({ variables: { _id: template._id, ...variables } })
         .then(() => {
-          toast({ title: 'Template updated' });
+          toast({ title: '模板已更新' });
           afterSave?.();
         })
         .catch((e) => {
-          toast({ title: 'Error', description: e.message, variant: 'destructive' });
+          toast({ title: '错误', description: e.message, variant: 'destructive' });
         });
     } else {
       addMutation({ variables })
         .then(() => {
-          toast({ title: 'Template created' });
+          toast({ title: '模板已创建' });
           afterSave?.();
         })
         .catch((e) => {
-          toast({ title: 'Error', description: e.message, variant: 'destructive' });
+          toast({ title: '错误', description: e.message, variant: 'destructive' });
         });
     }
   };
@@ -107,9 +107,9 @@ export const TemplateForm = ({
               name="name"
               render={({ field }) => (
                 <Form.Item>
-                  <Form.Label>Template Name</Form.Label>
+                  <Form.Label>模板名称</Form.Label>
                   <Form.Control>
-                    <Input {...field} placeholder="e.g., Bug Report, Feature Request" />
+                    <Input {...field} placeholder="例如：缺陷反馈、功能请求" />
                   </Form.Control>
                 </Form.Item>
               )}
@@ -119,22 +119,22 @@ export const TemplateForm = ({
           <Separator />
 
           <div className="flex-1 overflow-y-auto space-y-4 pr-1">
-              <h3 className="font-semibold text-sm text-foreground/80">Task Content</h3>
+              <h3 className="font-semibold text-sm text-foreground/80">任务内容</h3>
               <Form.Field
                 control={form.control}
                 name="taskName"
                 render={({ field }) => (
                   <Form.Item>
-                    <Form.Label>Task Title</Form.Label>
+                    <Form.Label>任务标题</Form.Label>
                     <Form.Control>
-                      <Input {...field} placeholder="Default task title" />
+                      <Input {...field} placeholder="默认任务标题" />
                     </Form.Control>
                   </Form.Item>
                 )}
               />
 
               <div className="space-y-2">
-                 <Label>Task Description</Label>
+                 <Label>任务描述</Label>
                  <div className="border rounded-md min-h-[150px] p-2">
                     <BlockEditor
                       editor={editor}
@@ -147,9 +147,9 @@ export const TemplateForm = ({
 
           <div className="flex justify-end gap-2 shrink-0 pt-2 mt-auto">
             <Button variant="outline" onClick={onCancel} type="button">
-              Cancel
+              取消
             </Button>
-            <Button type="submit">Save Template</Button>
+            <Button type="submit">保存模板</Button>
           </div>
         </form>
       </Form>

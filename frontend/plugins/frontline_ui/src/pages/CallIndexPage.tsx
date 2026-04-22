@@ -15,7 +15,7 @@ export const CallIndexPage = () => {
                 <Button variant="ghost" asChild>
                   <Link to="/frontline/calls/dashboard">
                     <IconPhone />
-                    Queue Switchboard
+                    队列总机台
                   </Link>
                 </Button>
               </Breadcrumb.Item>
@@ -24,7 +24,7 @@ export const CallIndexPage = () => {
                 <Button variant="ghost" asChild>
                   <Link to="/frontline/calls/statistics">
                     <IconPhone />
-                    Queue Statistics
+                    队列统计
                   </Link>
                 </Button>
               </Breadcrumb.Item>

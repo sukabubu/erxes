@@ -56,32 +56,32 @@ const TicketsFilterPopover = () => {
           <Filter.View>
             <Command>
               <Filter.CommandInput
-                placeholder="Filter"
+                placeholder="筛选"
                 variant="secondary"
                 className="bg-background"
               />
               <Command.List className="p-1">
                 <Filter.Item value="searchValue" inDialog>
                   <IconSearch />
-                  Search
+                  搜索
                 </Filter.Item>
                 <Command.Separator className="my-1" />
                 <Filter.Item value="assignee">
                   <IconUser />
-                  Assignee
+                  负责人
                 </Filter.Item>
                 <Filter.Item value="priority">
                   <IconAlertSquareRounded />
-                  Priority
+                  优先级
                 </Filter.Item>
                 <Filter.Item value="state">
                   <IconArchive />
-                  Status
+                  状态
                 </Filter.Item>
                 {view === 'list' && (
                   <Filter.Item value="statusId">
                     <IconProgressCheck />
-                    Status
+                    状态
                   </Filter.Item>
                 )}
               </Command.List>
@@ -133,7 +133,7 @@ export const TicketsFilter = () => {
           <Filter.BarItem queryKey="searchValue">
             <Filter.BarName>
               <IconSearch />
-              Search
+              搜索
             </Filter.BarName>
             <Filter.BarButton filterKey="searchValue" inDialog>
               {searchValue}
@@ -144,14 +144,14 @@ export const TicketsFilter = () => {
         <Filter.BarItem queryKey="priority">
           <Filter.BarName>
             <IconAlertSquareRounded />
-            Priority
+            优先级
           </Filter.BarName>
           <SelectPriorityTicket.FilterBar />
         </Filter.BarItem>
         <Filter.BarItem queryKey="state">
           <Filter.BarName>
             <IconArchive />
-            Status
+            状态
           </Filter.BarName>
           <SelectStateTicket.FilterBar />
         </Filter.BarItem>
@@ -159,7 +159,7 @@ export const TicketsFilter = () => {
           <Filter.BarItem queryKey="statusId">
             <Filter.BarName>
               <IconProgressCheck />
-              Status
+              状态
             </Filter.BarName>
             <SelectStatusTicket.FilterBar
               pipelineId={queries?.pipelineId || ''}
@@ -170,7 +170,7 @@ export const TicketsFilter = () => {
         <Filter.BarItem queryKey="assignee">
           <Filter.BarName>
             <IconUser />
-            Assignee
+            负责人
           </Filter.BarName>
           <SelectAssigneeTicket.FilterBar />
         </Filter.BarItem>

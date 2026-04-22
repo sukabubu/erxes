@@ -30,7 +30,7 @@ const TicketsIndexPage = () => {
                 <Button variant="ghost" asChild>
                   <Link to="/frontline/tickets">
                     <IconTicket />
-                    Tickets
+                    工单
                   </Link>
                 </Button>
               </Breadcrumb.Item>

@@ -69,7 +69,7 @@ export function TicketNavigations() {
   }, [channels, setChannelId, channelId]);
   return (
     <>
-      <NavigationMenuGroup name="Channels">
+      <NavigationMenuGroup name="渠道">
         {loading ? (
           <LoadingSkeleton />
         ) : (
@@ -78,7 +78,7 @@ export function TicketNavigations() {
           ))
         )}
       </NavigationMenuGroup>
-      <NavigationMenuGroup name="Pipelines">
+      <NavigationMenuGroup name="流程">
         {channelId && <Pipelines />}
       </NavigationMenuGroup>
     </>
@@ -124,7 +124,7 @@ const Pipelines = () => {
           {!loading && !pipelines?.length && (
             <Sidebar.MenuItem>
               <Sidebar.MenuButton disabled={true}>
-                <span className="capitalize text-foreground">No pipelines</span>
+                <span className="capitalize text-foreground">暂无流程</span>
               </Sidebar.MenuButton>
             </Sidebar.MenuItem>
           )}

@@ -54,7 +54,7 @@ export const TaskFields = ({ task }: { task: ITask }) => {
 
   const editor = useBlockEditor({
     initialContent: descriptionContent?.length ? descriptionContent : undefined,
-    placeholder: 'Description...',
+    placeholder: '描述...',
   });
   const { updateTask } = useUpdateTask();
   const [name, setName] = useState(_name);
@@ -111,7 +111,7 @@ export const TaskFields = ({ task }: { task: ITask }) => {
         ref={textareaRef}
         className="shadow-none focus-visible:shadow-none p-0"
         style={{ fontSize: '1.25rem', lineHeight: '1.75rem' }}
-        placeholder="Task Name"
+        placeholder="任务名称"
         value={name}
         onChange={(e) => setName(e.target.value)}
       />

@@ -1,0 +1,28 @@
+{
+  "segment-types": "分群类型",
+  "team-member": "团队成员",
+  "customer": "客户",
+  "lead": "线索",
+  "product": "产品",
+  "segment": "分群",
+  "name": "名称",
+  "description": "描述",
+  "count": "数量",
+  "create-segment": "创建分群",
+  "edit": "编辑",
+  "create": "创建",
+  "a-segment": "分群",
+  "detail": {
+    "name": "名称",
+    "parent-segment": "父分群",
+    "color": "颜色",
+    "description": "描述",
+    "property": "属性",
+    "value": "值",
+    "condition": "条件",
+    "add-condition": "添加条件",
+    "calculate-segment-reach": "计算分群覆盖范围",
+    "save-segment": "保存分群",
+    "add-group": "添加分组"
+  }
+}

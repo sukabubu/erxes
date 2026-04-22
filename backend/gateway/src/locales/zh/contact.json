@@ -1,0 +1,97 @@
+{
+  "customers": "客户",
+  "companies": "公司",
+  "leads": "线索",
+  "customer": {
+    "_": "客户",
+    "add": {
+      "_": "新增客户",
+      "upload": "上传",
+      "upload-description": "上传 1:1 图片，最大 2MB",
+      "first-name": "名",
+      "last-name": "姓",
+      "email": "邮箱",
+      "phone": "电话",
+      "owner": "负责人",
+      "code": "编码",
+      "email-verification-status": "邮箱验证状态",
+      "phone-verification-status": "电话验证状态",
+      "description": "描述",
+      "subscribed": "已订阅",
+      "success-message": "客户添加成功"
+    },
+    "detail": {
+      "add-tags": "添加标签",
+      "add-phone": "添加电话",
+      "edit-phone": "编辑电话",
+      "add-company": "添加公司",
+      "customer-detail": "客户详情",
+      "works-at": "就职于",
+      "owner": "负责人",
+      "tags": "标签",
+      "code": "编码",
+      "phones": "电话",
+      "emails": "邮箱",
+      "description": "描述",
+      "subscribed": "已订阅",
+      "score": "评分"
+    },
+    "edit": "编辑客户",
+    "delete": "删除客户",
+    "confirm-delete": "确定要删除该客户吗？",
+    "name": "姓名",
+    "emails": "邮箱",
+    "phones": "电话",
+    "tags": "标签",
+    "sex": "性别",
+    "owner": "负责人",
+    "last-seen": "最后活跃",
+    "session-count": "会话次数",
+    "created-at": "创建时间"
+  },
+  "company": {
+    "name": "名称",
+    "emails": "邮箱",
+    "phones": "电话",
+    "tags": "标签",
+    "plan": "方案",
+    "owner": "负责人",
+    "last-seen": "最后活跃",
+    "profile-score": "资料完整度",
+    "field": {
+      "primaryName": "名称",
+      "code": "编码",
+      "owner": "负责人",
+      "parentCompanyId": "母公司",
+      "email": "邮箱",
+      "phone": "电话",
+      "website": "网站",
+      "industry": "行业",
+      "location": "总部国家",
+      "businessType": "业务类型",
+      "size": "规模",
+      "plan": "方案",
+      "description": "描述",
+      "owner-placeholder": "选择负责人",
+      "industry-placeholder": "选择行业"
+    },
+    "add": {
+      "_": "新增公司",
+      "success-message": "公司添加成功"
+    }
+  },
+  "lead": {
+    "add": {
+      "_": "新增线索",
+      "success-message": "线索添加成功"
+    },
+    "detail": {
+      "lead-detail": "线索详情"
+    }
+  },
+  "upload": "上传",
+  "upload-description": "上传 1:1 图片，最大 2MB",
+  "save": "保存",
+  "cancel": "取消",
+  "success": "成功"
+}

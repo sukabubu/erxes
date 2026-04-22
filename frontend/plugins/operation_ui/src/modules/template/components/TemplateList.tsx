@@ -55,7 +55,7 @@ const TemplateRowActions = ({
                   onEdit(template);
                 }}
               >
-                <IconEdit className="mr-2 h-4 w-4" /> Edit
+                <IconEdit className="mr-2 h-4 w-4" /> 编辑
               </Command.Item>
               <Command.Item
                 value="delete"
@@ -65,7 +65,7 @@ const TemplateRowActions = ({
                   setShowDeleteDialog(true);
                 }}
               >
-                <IconTrash className="mr-2 size-4" /> Delete
+                <IconTrash className="mr-2 size-4" /> 删除
               </Command.Item>
             </Command.List>
           </Command>
@@ -75,15 +75,15 @@ const TemplateRowActions = ({
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <AlertDialog.Content>
           <AlertDialog.Header>
-            <AlertDialog.Title>Delete Template?</AlertDialog.Title>
+            <AlertDialog.Title>删除模板？</AlertDialog.Title>
             <AlertDialog.Description>
-              This action cannot be undone.
+              此操作无法撤销。
             </AlertDialog.Description>
           </AlertDialog.Header>
           <AlertDialog.Footer>
-            <AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
+            <AlertDialog.Cancel>取消</AlertDialog.Cancel>
             <AlertDialog.Action onClick={() => onRemove(template._id)}>
-              Delete
+              删除
             </AlertDialog.Action>
           </AlertDialog.Footer>
         </AlertDialog.Content>
@@ -114,8 +114,8 @@ export const TemplateList = () => {
 
   const handleRemove = (id: string) => {
     removeMutation({ variables: { _id: id } })
-      .then(() => toast({ title: 'Template removed' }))
-      .catch((e) => toast({ title: 'Error', description: e.message }));
+      .then(() => toast({ title: '模板已删除' }))
+      .catch((e) => toast({ title: '错误', description: e.message }));
   };
 
   const handleAdd = () => {
@@ -125,13 +125,13 @@ export const TemplateList = () => {
   const templates = data?.operationTemplates || [];
 
   const columns = useMemo<ColumnDef<any>[]>(
-    () => [
-      {
-        id: 'name',
-        accessorKey: 'name',
-        header: () => (
-          <RecordTable.InlineHead label="Name" icon={IconAlignLeft} />
-        ),
+        () => [
+          {
+            id: 'name',
+            accessorKey: 'name',
+            header: () => (
+          <RecordTable.InlineHead label="名称" icon={IconAlignLeft} />
+            ),
         cell: ({ cell }) => (
           <Button asChild variant="ghost">
             <Badge
@@ -145,12 +145,12 @@ export const TemplateList = () => {
           </Button>
         ),
       },
-      {
-        id: 'createdAt',
-        accessorKey: 'createdAt',
-        header: () => (
-          <RecordTable.InlineHead label="Created At" icon={IconCalendar} />
-        ),
+          {
+            id: 'createdAt',
+            accessorKey: 'createdAt',
+            header: () => (
+          <RecordTable.InlineHead label="创建时间" icon={IconCalendar} />
+            ),
         cell: ({ cell }) => {
           return (
             <RelativeDateDisplay value={cell.getValue() as string} asChild>
@@ -161,12 +161,12 @@ export const TemplateList = () => {
           );
         },
       },
-      {
-        id: 'createdBy',
-        accessorKey: 'createdBy',
-        header: () => (
-          <RecordTable.InlineHead label="Created By" icon={IconUser} />
-        ),
+          {
+            id: 'createdBy',
+            accessorKey: 'createdBy',
+            header: () => (
+          <RecordTable.InlineHead label="创建人" icon={IconUser} />
+            ),
         cell: ({ getValue }) => {
           const userId = getValue() as string;
           if (!userId) return '-';
@@ -196,10 +196,10 @@ export const TemplateList = () => {
   return (
     <div className="p-6 h-full space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="font-semibold">Templates</h2>
+        <h2 className="font-semibold">模板</h2>
         <Button onClick={handleAdd}>
           <IconPlus className="mr-2 size-4" />
-          New Template
+          新建模板
         </Button>
       </div>
 
@@ -222,7 +222,7 @@ export const TemplateList = () => {
             {loading && <RecordTable.RowSkeleton rows={5} />}
             {templates.length === 0 && !loading && (
               <div className="p-8 text-center text-muted-foreground text-sm italic">
-                No templates found
+                未找到模板
               </div>
             )}
           </RecordTable.Body>

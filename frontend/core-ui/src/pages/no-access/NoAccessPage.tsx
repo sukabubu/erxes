@@ -7,10 +7,9 @@ export const NoAccessPage = () => {
         <div className="flex items-center justify-center w-16 h-16 rounded-full bg-gray-100">
           <IconLock className="w-8 h-8 text-gray-400" />
         </div>
-        <h2 className="text-2xl font-semibold text-gray-800">Access Denied</h2>
+        <h2 className="text-2xl font-semibold text-gray-800">拒绝访问</h2>
         <p className="text-gray-500">
-          You don't have permission to access this page. Contact your
-          administrator to request access.
+          你没有权限访问此页面。如需访问，请联系管理员申请权限。
         </p>
       </div>
     </div>

@@ -1,0 +1,61 @@
+{
+  "name": "china_leads_ui",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "frontend/plugins/china_leads_ui/src",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/rspack:rspack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "target": "web",
+        "outputPath": "dist/frontend/plugins/china_leads_ui",
+        "main": "frontend/plugins/china_leads_ui/src/main.ts",
+        "tsConfig": "frontend/plugins/china_leads_ui/tsconfig.app.json",
+        "rspackConfig": "frontend/plugins/china_leads_ui/rspack.config.ts",
+        "assets": []
+      },
+      "configurations": {
+        "development": {
+          "mode": "development"
+        },
+        "production": {
+          "mode": "production",
+          "optimization": true,
+          "sourceMap": false,
+          "rspackConfig": "frontend/plugins/china_leads_ui/rspack.config.prod.ts"
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/rspack:module-federation-dev-server",
+      "options": {
+        "buildTarget": "china_leads_ui:build:development",
+        "port": 3015
+      },
+      "configurations": {
+        "development": {},
+        "production": {
+          "buildTarget": "china_leads_ui:build:production"
+        }
+      }
+    },
+    "serve-static": {
+      "executor": "@nx/rspack:module-federation-static-server",
+      "defaultConfiguration": "production",
+      "options": {
+        "serveTarget": "china_leads_ui:serve"
+      },
+      "configurations": {
+        "development": {
+          "serveTarget": "china_leads_ui:serve:development"
+        },
+        "production": {
+          "serveTarget": "china_leads_ui:serve:production"
+        }
+      }
+    }
+  }
+}

@@ -17,7 +17,7 @@ const InboxIndexPage = () => {
                 <Button variant="ghost" asChild>
                   <Link to="/frontline/inbox">
                     <IconMail />
-                    Inbox
+                    收件箱
                   </Link>
                 </Button>
               </Breadcrumb.Item>

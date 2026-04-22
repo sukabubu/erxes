@@ -41,7 +41,7 @@ export const GET_CORE_MODULES = (
           icon: IconBuilding,
         },
         {
-          name: 'Client Portal Users',
+          name: t('client-portal-users'),
           path: 'contacts/client-portal-users',
           icon: IconUser,
         },

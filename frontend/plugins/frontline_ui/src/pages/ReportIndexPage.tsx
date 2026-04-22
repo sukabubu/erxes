@@ -22,7 +22,7 @@ export default function ReportIndexPage() {
                 <Button variant="ghost" asChild>
                   <Link to="/frontline/reports">
                     <IconChartHistogram />
-                    Reports
+                    报表
                   </Link>
                 </Button>
               </Breadcrumb.Item>
@@ -32,7 +32,7 @@ export default function ReportIndexPage() {
                 <>
                   <Separator.Inline />
                   <Breadcrumb.Item>
-                    <span className="font-medium">Inbox</span>
+                    <span className="font-medium">收件箱</span>
                   </Breadcrumb.Item>
                 </>
               )}
@@ -40,7 +40,7 @@ export default function ReportIndexPage() {
                 <>
                   <Separator.Inline />
                   <Breadcrumb.Item>
-                    <span className="font-medium">Ticket</span>
+                    <span className="font-medium">工单</span>
                   </Breadcrumb.Item>
                 </>
               )}
@@ -48,7 +48,7 @@ export default function ReportIndexPage() {
                 <>
                   <Separator.Inline />
                   <Breadcrumb.Item>
-                    <span className="font-medium">Call</span>
+                    <span className="font-medium">呼叫</span>
                   </Breadcrumb.Item>
                 </>
               )}
@@ -60,10 +60,10 @@ export default function ReportIndexPage() {
       </PageHeader>
       <div className="mx-auto flex w-full max-w-[1600px] flex-wrap gap-2 px-8 pb-2 pt-6">
         <Button variant={isOverviewReport ? 'default' : 'outline'} asChild>
-          <Link to="/frontline/reports">Frontline Overview</Link>
+          <Link to="/frontline/reports">客服总览</Link>
         </Button>
         <Button variant={isCallReport ? 'default' : 'outline'} asChild>
-          <Link to="/frontline/reports/call">Call Center</Link>
+          <Link to="/frontline/reports/call">呼叫中心</Link>
         </Button>
       </div>
       {isTicketReport ? (

@@ -122,7 +122,7 @@ const Pipelines = () => {
           {!loading && !pipelines?.length && (
             <Sidebar.MenuItem>
               <Sidebar.MenuButton disabled={true}>
-                <span className="capitalize text-foreground">No pipelines</span>
+                <span className="capitalize text-foreground">暂无流程</span>
               </Sidebar.MenuButton>
             </Sidebar.MenuItem>
           )}
@@ -140,19 +140,19 @@ const ActionsMenu = () => {
   const handleCopyLink = async () => {
     const link = `${window.location.origin}/settings/deals`;
 
-    try {
-      await navigator.clipboard.writeText(link);
-      toast({
-        variant: 'default',
-        title: 'Link copied to clipboard',
-      });
-    } catch (e) {
-      toast({
-        variant: 'destructive',
-        title: 'Failed to copy link',
-        description: e as string,
-      });
-    }
+      try {
+        await navigator.clipboard.writeText(link);
+        toast({
+          variant: 'default',
+          title: '链接已复制到剪贴板',
+        });
+      } catch (e) {
+        toast({
+          variant: 'destructive',
+          title: '复制链接失败',
+          description: e as string,
+        });
+      }
   };
 
   return (
@@ -177,7 +177,7 @@ const ActionsMenu = () => {
           }}
         >
           <IconSettings className="size-4" />
-          Manage board & pipelines
+          管理看板与流程
         </DropdownMenu.Item>
         <DropdownMenu.Item
           onSelect={(e) => {
@@ -186,7 +186,7 @@ const ActionsMenu = () => {
           className="cursor-pointer"
         >
           <IconLink className="size-4" />
-          Copy link
+          复制链接
         </DropdownMenu.Item>
       </DropdownMenu.Content>
     </DropdownMenu>
@@ -214,14 +214,14 @@ const DealsNavigation = () => {
 
   return (
     <>
-      <NavigationMenuGroup name="Boards" actions={<ActionsMenu />}>
+      <NavigationMenuGroup name="看板" actions={<ActionsMenu />}>
         {loading ? (
           <LoadingSkeleton />
         ) : (
           boards?.map((board) => <BoardItem key={board._id} board={board} />)
         )}
       </NavigationMenuGroup>
-      <NavigationMenuGroup name="Pipelines" actions={<ActionsMenu />}>
+      <NavigationMenuGroup name="流程" actions={<ActionsMenu />}>
         {boardId && <Pipelines />}
       </NavigationMenuGroup>
     </>

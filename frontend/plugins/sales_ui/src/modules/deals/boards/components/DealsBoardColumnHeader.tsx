@@ -40,7 +40,7 @@ export const DealsBoardColumnHeader = ({
 
   const handleArchiveStage = () => {
     confirm({
-      message: `Are you sure you want to archive all cards in this list?`,
+      message: '确定要归档此列表中的所有卡片吗？',
     }).then(() => {
       archiveDeals(_id);
     });
@@ -48,7 +48,7 @@ export const DealsBoardColumnHeader = ({
 
   const handleArchiveList = () => {
     confirm({
-      message: `Are you sure you want to archive this list?`,
+      message: '确定要归档此列表吗？',
     }).then(() => {
       editStage({ variables: { _id, status: 'archived' } });
     });
@@ -56,7 +56,7 @@ export const DealsBoardColumnHeader = ({
 
   const handleRemoveStage = () => {
     confirm({
-      message: `Are you sure you want to remove this stage?`,
+      message: '确定要删除此阶段吗？',
     }).then(() => {
       removeStage({ variables: { _id } });
     });
@@ -65,22 +65,22 @@ export const DealsBoardColumnHeader = ({
   const handleSortOptionClick = (sortType: string) => {
     const sortLabel =
       sortType === 'created-desc'
-        ? 'Date created (Newest first)'
+        ? '创建日期（最新优先）'
         : sortType === 'created-asc'
-        ? 'Date created (Oldest first)'
+        ? '创建日期（最早优先）'
         : sortType === 'modified-desc'
-        ? 'Date modified (Newest first)'
+        ? '修改日期（最新优先）'
         : sortType === 'modified-asc'
-        ? 'Date modified (Oldest first)'
+        ? '修改日期（最早优先）'
         : sortType === 'close-asc'
-        ? 'Date assigned (Earliest first)'
+        ? '分配日期（最早优先）'
         : sortType === 'close-desc'
-        ? 'Date assigned (Latest first)'
+        ? '分配日期（最新优先）'
         : sortType === 'alphabetically-asc'
-        ? 'Alphabetically'
+        ? '按字母顺序'
         : '';
     confirm({
-      message: `Are you sure you want to sort this list by ${sortLabel}?`,
+      message: `确定要按${sortLabel}排序此列表吗？`,
     }).then(() => {
       const processId = Math.random().toString();
       localStorage.setItem('processId', processId);
@@ -98,31 +98,31 @@ export const DealsBoardColumnHeader = ({
         }}
       >
         <IconArrowLeft className="w-4 h-4 mr-2" />
-        Back
+        返回
       </DropdownMenu.Item>
       <DropdownMenu.Separator />
       <DropdownMenu.Item onClick={() => handleSortOptionClick('created-desc')}>
-        Date created (Newest first)
+        创建日期（最新优先）
       </DropdownMenu.Item>
       <DropdownMenu.Item onClick={() => handleSortOptionClick('created-asc')}>
-        Date created (Oldest first)
+        创建日期（最早优先）
       </DropdownMenu.Item>
       <DropdownMenu.Item onClick={() => handleSortOptionClick('modified-desc')}>
-        Date modified (Newest first)
+        修改日期（最新优先）
       </DropdownMenu.Item>
       <DropdownMenu.Item onClick={() => handleSortOptionClick('modified-asc')}>
-        Date modified (Oldest first)
+        修改日期（最早优先）
       </DropdownMenu.Item>
       <DropdownMenu.Item onClick={() => handleSortOptionClick('close-asc')}>
-        Date assigned (Earliest first)
+        分配日期（最早优先）
       </DropdownMenu.Item>
       <DropdownMenu.Item onClick={() => handleSortOptionClick('close-desc')}>
-        Date assigned (Latest first)
+        分配日期（最新优先）
       </DropdownMenu.Item>
       <DropdownMenu.Item
         onClick={() => handleSortOptionClick('alphabetically-asc')}
       >
-        Alphabetically
+        按字母顺序
       </DropdownMenu.Item>
     </>
   );
@@ -152,19 +152,19 @@ export const DealsBoardColumnHeader = ({
             <DropdownMenu.Content className="w-56">
               {!showSortOptions ? (
                 <>
-                  <DropdownMenu.Label>Stage section</DropdownMenu.Label>
+                  <DropdownMenu.Label>阶段设置</DropdownMenu.Label>
                   <DropdownMenu.Separator />
                   <DropdownMenu.Group>
                     <DropdownMenu.Item onClick={handleArchiveStage}>
-                      Archive All Cards in This List
+                      归档此列表中的所有卡片
                       <DropdownMenu.Shortcut>⇧⌘A</DropdownMenu.Shortcut>
                     </DropdownMenu.Item>
                     <DropdownMenu.Item onClick={handleArchiveList}>
-                      Archive This List
+                      归档此列表
                       <DropdownMenu.Shortcut>⌘B</DropdownMenu.Shortcut>
                     </DropdownMenu.Item>
                     <DropdownMenu.Item onClick={handleRemoveStage}>
-                      Remove stage
+                      删除阶段
                       <DropdownMenu.Shortcut>⌘S</DropdownMenu.Shortcut>
                     </DropdownMenu.Item>
                   </DropdownMenu.Group>
@@ -176,7 +176,7 @@ export const DealsBoardColumnHeader = ({
                         setShowSortOptions(true);
                       }}
                     >
-                      Sort By
+                      排序方式
                     </DropdownMenu.Item>
                     <DropdownMenu.Item
                       onSelect={(e) => {
@@ -184,7 +184,7 @@ export const DealsBoardColumnHeader = ({
                         setShowPrintDialog(true);
                       }}
                     >
-                      Print Document
+                      打印文档
                       <DropdownMenu.Shortcut>⌘T</DropdownMenu.Shortcut>
                     </DropdownMenu.Item>
                   </DropdownMenu.Group>

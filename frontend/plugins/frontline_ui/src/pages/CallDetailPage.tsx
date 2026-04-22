@@ -214,11 +214,11 @@ export const CallDetailAgents = ({
 
   return (
     <div className="row-span-2 flex flex-col gap-3">
-      <h5 className="font-mono text-xs uppercase font-semibold">Agents</h5>
+      <h5 className="font-mono text-xs uppercase font-semibold">坐席</h5>
       <div className="relative">
         <IconSearch className="size-4 absolute left-2 top-1/2 -translate-y-1/2 text-accent-foreground" />
         <Input
-          placeholder="Search"
+          placeholder="搜索"
           value={search}
           className="pl-8 relative bg-transparent"
           onChange={(e) => setSearch(e.target.value)}
@@ -242,7 +242,7 @@ export const agentColumns: ColumnDef<CallQueueMemberList['member'][number]>[] =
   [
     {
       accessorKey: 'status',
-      header: () => <RecordTable.InlineHead label="Status" />,
+      header: () => <RecordTable.InlineHead label="状态" />,
       cell: ({ cell }) => (
         <RecordTableInlineCell>
           <Badge
@@ -264,7 +264,7 @@ export const agentColumns: ColumnDef<CallQueueMemberList['member'][number]>[] =
     },
     {
       accessorKey: 'member_extension',
-      header: () => <RecordTable.InlineHead label="Extention" />,
+      header: () => <RecordTable.InlineHead label="分机号" />,
       cell: ({ cell }) => (
         <RecordTableInlineCell className="font-mono">
           <Badge variant="secondary">{cell.getValue() as string}</Badge>
@@ -275,7 +275,7 @@ export const agentColumns: ColumnDef<CallQueueMemberList['member'][number]>[] =
 
     {
       accessorKey: 'name',
-      header: () => <RecordTable.InlineHead label="Name" />,
+      header: () => <RecordTable.InlineHead label="姓名" />,
       cell: ({ cell }) => {
         const { first_name, last_name } = cell.row.original;
         return (
@@ -288,7 +288,7 @@ export const agentColumns: ColumnDef<CallQueueMemberList['member'][number]>[] =
     },
     {
       accessorKey: 'answer',
-      header: () => <RecordTable.InlineHead label="Answered" />,
+      header: () => <RecordTable.InlineHead label="已接听" />,
       cell: ({ cell }) => (
         <RecordTableInlineCell className="font-medium">
           {cell.getValue() as number}
@@ -298,7 +298,7 @@ export const agentColumns: ColumnDef<CallQueueMemberList['member'][number]>[] =
     },
     {
       accessorKey: 'abandon',
-      header: () => <RecordTable.InlineHead label="Abandoned" />,
+      header: () => <RecordTable.InlineHead label="已放弃" />,
       cell: ({ cell }) => (
         <RecordTableInlineCell className="font-medium">
           {cell.getValue() as number}
@@ -308,7 +308,7 @@ export const agentColumns: ColumnDef<CallQueueMemberList['member'][number]>[] =
     },
     {
       accessorKey: 'talktime',
-      header: () => <RecordTable.InlineHead label="Talk Time" />,
+      header: () => <RecordTable.InlineHead label="通话时长" />,
       cell: ({ cell }) => (
         <RecordTableInlineCell className="font-medium">
           {formatSeconds(cell.getValue() as number)}
@@ -318,7 +318,7 @@ export const agentColumns: ColumnDef<CallQueueMemberList['member'][number]>[] =
     },
     {
       accessorKey: 'pausetime',
-      header: () => <RecordTable.InlineHead label="Pause Time" />,
+      header: () => <RecordTable.InlineHead label="暂停时长" />,
       cell: ({ cell }) => (
         <RecordTableInlineCell className="font-medium">
           {safeFormatDate(cell?.getValue())}
@@ -360,7 +360,7 @@ export const CallDetailCard = ({
         <h3 className="font-semibold text-2xl leading-none">{value}</h3>
         <Separator />
         <div className="text-accent-foreground text-xs leading-none">
-          updated {date && <RelativeDateDisplay.Value value={date} />}
+          更新于 {date && <RelativeDateDisplay.Value value={date} />}
         </div>
       </div>
     </div>
@@ -374,12 +374,12 @@ export const CallDetailWaiting = ({
 }) => {
   return (
     <div className="flex flex-col gap-3">
-      <h5 className="font-mono text-xs uppercase font-semibold">Waiting</h5>
+      <h5 className="font-mono text-xs uppercase font-semibold">等待中</h5>
       <RecordTable.Provider
         columns={[
           {
             accessorKey: 'callerid',
-            header: () => <RecordTable.InlineHead label="Caller ID" />,
+            header: () => <RecordTable.InlineHead label="来电号码" />,
             cell: ({ cell }) => (
               <RecordTableInlineCell className="font-medium">
                 {formatPhoneNumber({
@@ -391,7 +391,7 @@ export const CallDetailWaiting = ({
           },
           {
             accessorKey: 'callerchannel',
-            header: () => <RecordTable.InlineHead label="Caller Channel" />,
+            header: () => <RecordTable.InlineHead label="来电渠道" />,
             cell: ({ cell }) => (
               <RecordTableInlineCell className="font-medium">
                 {cell.getValue() as string}
@@ -424,12 +424,12 @@ export const CallDetailTalking = ({
 }) => {
   return (
     <div className="flex flex-col gap-3">
-      <h5 className="font-mono text-xs uppercase font-semibold">Talking</h5>
+      <h5 className="font-mono text-xs uppercase font-semibold">通话中</h5>
       <RecordTable.Provider
         columns={[
           {
             accessorKey: 'callerid',
-            header: () => <RecordTable.InlineHead label="Caller ID" />,
+            header: () => <RecordTable.InlineHead label="来电号码" />,
             cell: ({ cell }) => (
               <RecordTableInlineCell className="font-medium">
                 {formatPhoneNumber({
@@ -441,7 +441,7 @@ export const CallDetailTalking = ({
           },
           {
             accessorKey: 'calleeid',
-            header: () => <RecordTable.InlineHead label="Caller Channel" />,
+            header: () => <RecordTable.InlineHead label="来电渠道" />,
             cell: ({ cell }) => (
               <RecordTableInlineCell className="font-medium">
                 {cell.getValue() as string}
@@ -450,7 +450,7 @@ export const CallDetailTalking = ({
           },
           {
             accessorKey: 'bridge_time',
-            header: () => <RecordTable.InlineHead label="Duration" />,
+            header: () => <RecordTable.InlineHead label="时长" />,
             cell: ({ cell }) => {
               // eslint-disable-next-line react-hooks/rules-of-hooks
               const duration = useCallDurationFromDate(cell.getValue() as Date);

@@ -31,16 +31,16 @@ export const useLoginMagicLink = () => {
       variables: { email },
       onCompleted: () => {
         toast({
-          title: 'We have sent an email containing the magic link to sign in.',
+          title: '我们已向你的邮箱发送登录魔法链接。',
         });
         resetStore();
       },
       onError: ({ message }) => {
         const isInvalidLogin = message.includes('Invalid login');
         toast({
-          title: isInvalidLogin ? 'Invalid login' : 'Something went wrong',
+          title: isInvalidLogin ? '登录无效' : '发生错误',
           description: isInvalidLogin
-            ? 'The email address or password you entered is incorrect.'
+            ? '你输入的邮箱地址或密码不正确。'
             : message,
           variant: 'destructive',
         });
@@ -61,8 +61,8 @@ export const useLoginMagicLink = () => {
             }
           } catch (error) {
             toast({
-              title: 'Something went wrong',
-              description: 'Invalid redirect URL received',
+              title: '发生错误',
+              description: '收到无效的跳转地址',
               variant: 'destructive',
             });
           }
@@ -70,7 +70,7 @@ export const useLoginMagicLink = () => {
       },
       onError: ({ message }) => {
         toast({
-          title: 'Something went wrong',
+          title: '发生错误',
           description: message,
           variant: 'destructive',
         });

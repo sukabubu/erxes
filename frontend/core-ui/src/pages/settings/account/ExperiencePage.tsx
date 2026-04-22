@@ -9,7 +9,7 @@ export const SettingsExperiencePage = () => {
       <div className="px-4 h-16 flex items-center">
         <SettingsBreadcrumbs />
       </div>
-      <h2 className="font-semibold text-lg mt-4 mb-12 px-4">Experience</h2>
+      <h2 className="font-semibold text-lg mt-4 mb-12 px-4">体验</h2>
       <div className="flex flex-col gap-10 px-4">
         <div className="flex flex-col gap-4">
           <ChooseTheme />

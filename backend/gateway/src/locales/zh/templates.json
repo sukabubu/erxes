@@ -1,0 +1,71 @@
+{
+  "templates": "模板",
+  "name": "名称",
+  "type": "类型",
+  "category": "分类",
+  "categories": "分类",
+  "content": "内容",
+  "description": "描述",
+  "no-category": "无分类",
+  "no-member": "无成员",
+  "not-updated-yet": "尚未更新",
+  "created-at": "创建时间",
+  "created-by": "创建人",
+  "updated-at": "更新时间",
+  "updated-by": "更新人",
+  "actions": "操作",
+  "import": "导入",
+  "export": "导出",
+  "create": "创建",
+  "edit": "编辑",
+  "delete": "删除",
+  "save": "保存",
+  "cancel": "取消",
+  "manage": "管理模板",
+  "list": "模板列表",
+  "details": "模板详情",
+  "types": {
+    "products": "产品",
+    "courses": "课程"
+  },
+  "form": {
+    "name-placeholder": "输入模板名称",
+    "type-placeholder": "选择模板类型",
+    "category-placeholder": "选择分类",
+    "content-placeholder": "输入模板内容",
+    "description-placeholder": "输入模板描述"
+  },
+  "validation": {
+    "name-required": "模板名称不能为空",
+    "type-required": "模板类型不能为空",
+    "content-required": "内容不能为空",
+    "name-exists": "已存在同名模板"
+  },
+  "filter": {
+    "search-placeholder": "搜索模板...",
+    "created-by": "创建人",
+    "updated-by": "更新人",
+    "parent": "上级分类",
+    "all-types": "全部类型",
+    "all-categories": "全部分类",
+    "filter-by-type": "按类型筛选",
+    "filter-by-category": "按分类筛选"
+  },
+  "empty": {
+    "no-templates": "未找到模板",
+    "no-results": "没有符合搜索条件的模板",
+    "create-first": "先创建第一个模板开始使用"
+  },
+  "messages": {
+    "create-success": "模板创建成功",
+    "update-success": "模板更新成功",
+    "delete-success": "模板删除成功",
+    "delete-confirm": "确定要删除此模板吗？",
+    "import-success": "模板导入成功！",
+    "import-failed": "导入失败：{{error}}",
+    "import-error": "导入模板失败，请检查文件格式。",
+    "export-success": "模板导出成功",
+    "export-failed": "导出模板失败，请重试。",
+    "auth-required": "请先登录后再导出模板，正在跳转到登录页..."
+  }
+}

@@ -48,7 +48,7 @@ export const useLogin = () => {
       },
       onError(error) {
         toast({
-          title: 'Email or password is incorrect',
+          title: '邮箱或密码错误',
           description: error.message,
           variant: 'destructive',
         });
@@ -72,16 +72,15 @@ export const useLogin = () => {
       await forgotPassword({ variables: { email } })
         .then(() => {
           toast({
-            title: 'Success',
-            description:
-              'Password reset instructions have been sent to your email.',
+            title: '成功',
+            description: '密码重置说明已发送到你的邮箱。',
             variant: 'success',
           });
           navigate(AppPath.Login);
         })
         .catch((e) => {
           toast({
-            title: 'Uh oh! Something went wrong.',
+            title: '出错了',
             description: e.message,
             variant: 'destructive',
           });
@@ -95,14 +94,14 @@ export const useLogin = () => {
       await resetPassword({ variables: { token, newPassword: password } })
         .then(() => {
           toast({
-            title: 'Success',
-            description: 'Password has been reset.',
+            title: '成功',
+            description: '密码已重置。',
             variant: 'success',
           });
         })
         .catch((e) => {
           toast({
-            title: 'Uh oh! Something went wrong.',
+            title: '出错了',
             description: e.message,
             variant: 'destructive',
           });

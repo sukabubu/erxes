@@ -28,10 +28,10 @@ import { cyclesMoreColumn } from './CyclesMoreColumn';
 
 const chartConfig = {
   visitors: {
-    label: 'Visitors',
+    label: '访客',
   },
   safari: {
-    label: 'Done',
+    label: '已完成',
     color: 'var(--primary)',
   },
 } satisfies ChartConfig;
@@ -44,7 +44,7 @@ export const cyclesColumns: ColumnDef<ICycle>[] = [
     id: 'name',
     accessorKey: 'name',
     header: () => (
-      <RecordTable.InlineHead label="Name" icon={IconLabelFilled} />
+      <RecordTable.InlineHead label="名称" icon={IconLabelFilled} />
     ),
     cell: ({ cell }) => {
       const name = cell.getValue() as string;
@@ -109,7 +109,7 @@ export const cyclesColumns: ColumnDef<ICycle>[] = [
     id: 'donePercent',
     accessorKey: 'donePercent',
     header: () => (
-      <RecordTable.InlineHead label="Progress" icon={IconProgress} />
+      <RecordTable.InlineHead label="进度" icon={IconProgress} />
     ),
     cell: ({ cell }) => {
       const { donePercent } = cell.row.original;
@@ -125,7 +125,7 @@ export const cyclesColumns: ColumnDef<ICycle>[] = [
               outerRadius={10}
               data={[
                 {
-                  name: 'Progress',
+                  name: '进度',
                   value: donePercent,
                   fill: 'var(--primary)',
                 },
@@ -156,7 +156,7 @@ export const cyclesColumns: ColumnDef<ICycle>[] = [
     id: 'status',
     accessorKey: 'status',
     header: () => (
-      <RecordTable.InlineHead label="Status" icon={IconProgressCheck} />
+      <RecordTable.InlineHead label="状态" icon={IconProgressCheck} />
     ),
     cell: ({ cell }) => {
       const { isActive, isCompleted } = cell.row.original;
@@ -172,7 +172,7 @@ export const cyclesColumns: ColumnDef<ICycle>[] = [
     id: 'startDate',
     accessorKey: 'startDate',
     header: () => (
-      <RecordTable.InlineHead label="Start Date" icon={IconCalendarFilled} />
+      <RecordTable.InlineHead label="开始日期" icon={IconCalendarFilled} />
     ),
     cell: ({ cell }) => {
       const startDate = cell.getValue() as string;
@@ -190,7 +190,7 @@ export const cyclesColumns: ColumnDef<ICycle>[] = [
     id: 'endDate',
     accessorKey: 'endDate',
     header: () => (
-      <RecordTable.InlineHead label="End Date" icon={IconCalendarFilled} />
+      <RecordTable.InlineHead label="结束日期" icon={IconCalendarFilled} />
     ),
     cell: ({ cell }) => {
       const { endDate, startDate } = cell.row.original;

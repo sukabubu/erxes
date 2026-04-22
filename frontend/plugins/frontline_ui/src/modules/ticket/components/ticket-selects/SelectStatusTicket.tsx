@@ -93,7 +93,7 @@ const SelectStatusValue = ({
   if (!selectedStatus) {
     return (
       <span className="text-accent-foreground/80">
-        {placeholder || 'Select status'}
+        {placeholder || '选择状态'}
       </span>
     );
   }
@@ -139,10 +139,10 @@ const SelectStatusContent = () => {
   const { statuses, pipelineId } = useSelectStatusContext();
   return (
     <Command>
-      <Command.Input placeholder="Search status" />
+      <Command.Input placeholder="搜索状态" />
       <Command.Empty>
         <span className="text-muted-foreground">
-          {pipelineId ? 'No status found' : 'Pipeline not selected'}
+          {pipelineId ? '未找到状态' : '未选择流程'}
         </span>
       </Command.Empty>
       <Command.List>
@@ -249,7 +249,7 @@ export const SelectStatusTicketFilterBar = ({
     >
       <PopoverScoped scope={scope} open={open} onOpenChange={setOpen}>
         <Filter.BarButton filterKey="statusId">
-          <SelectStatusValue placeholder="Status" />
+          <SelectStatusValue placeholder="状态" />
         </Filter.BarButton>
         <Combobox.Content>
           <SelectStatusContent />

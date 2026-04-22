@@ -36,9 +36,9 @@ const useSelectStateContext = () => {
 };
 
 const STATES = [
-  { value: 'active', label: 'Active', icon: IconCircleCheck },
-  { value: 'archived', label: 'Archived', icon: IconArchive },
-  { value: 'deleted', label: 'Deleted', icon: IconTrash },
+  { value: 'active', label: '启用', icon: IconCircleCheck },
+  { value: 'archived', label: '已归档', icon: IconArchive },
+  { value: 'deleted', label: '已删除', icon: IconTrash },
 ];
 
 const SelectStateProvider = ({
@@ -66,7 +66,7 @@ const SelectStateValue = ({ placeholder }: { placeholder?: string }) => {
   if (!selected) {
     return (
       <span className="text-accent-foreground/80">
-        {placeholder || 'Select state'}
+        {placeholder || '选择状态'}
       </span>
     );
   }
@@ -106,8 +106,8 @@ const SelectStateCommandItem = ({
 const SelectStateContent = () => {
   return (
     <Command>
-      <Command.Input placeholder="Search state" />
-      <Command.Empty>No state found</Command.Empty>
+      <Command.Input placeholder="搜索状态" />
+      <Command.Empty>未找到状态</Command.Empty>
       <Command.List>
         {STATES.map((state) => (
           <SelectStateCommandItem key={state.value} state={state} />
@@ -198,7 +198,7 @@ const SelectStateTicketFilterBar = ({ scope }: { scope?: string }) => {
     >
       <PopoverScoped scope={scope} open={open} onOpenChange={setOpen}>
         <SelectTriggerTicket variant="filter">
-          <SelectStateValue placeholder="State" />
+          <SelectStateValue placeholder="状态" />
         </SelectTriggerTicket>
         <SelectTicketContent variant="filter">
           <SelectStateContent />

@@ -92,7 +92,7 @@ const SelectStatusValue = ({
   if (!selectedStatus) {
     return (
       <span className="text-accent-foreground/80">
-        {placeholder || 'Select status'}
+        {placeholder || '选择状态'}
       </span>
     );
   }
@@ -134,8 +134,8 @@ const SelectStatusContent = () => {
   const { statuses } = useSelectStatusContext();
   return (
     <Command>
-      <Command.Input placeholder="Search status" />
-      <Command.Empty>No status found</Command.Empty>
+      <Command.Input placeholder="搜索状态" />
+      <Command.Empty>未找到状态</Command.Empty>
       <Command.List>
         {statuses?.map((status) => (
           <SelectStatusCommandItem key={status.value} status={status} />
@@ -235,7 +235,7 @@ export const SelectStatusTaskFilterBar = ({
     >
       <PopoverScoped scope={scope} open={open} onOpenChange={setOpen}>
         <Filter.BarButton filterKey={teamId ? 'status' : 'statusType'}>
-          <SelectStatusValue placeholder="Status" />
+          <SelectStatusValue placeholder="状态" />
         </Filter.BarButton>
         <Combobox.Content>
           <SelectStatusContent />

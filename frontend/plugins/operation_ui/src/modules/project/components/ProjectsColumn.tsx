@@ -43,7 +43,7 @@ export const projectsColumns = (
       id: 'name',
       accessorKey: 'name',
       header: () => (
-        <RecordTable.InlineHead label="Name" icon={IconLabelFilled} />
+        <RecordTable.InlineHead label="名称" icon={IconLabelFilled} />
       ),
       cell: ({ cell }) => {
         const name = cell.getValue() as string;
@@ -64,7 +64,7 @@ export const projectsColumns = (
             scope={clsx(
               ProjectHotKeyScope.ProjectTableCell,
               cell.row.original._id,
-              'Name',
+              '名称',
             )}
             closeOnEnter
             onOpenChange={(open) => {
@@ -103,7 +103,7 @@ export const projectsColumns = (
       accessorKey: 'priority',
       header: () => (
         <RecordTable.InlineHead
-          label="Priority"
+          label="优先级"
           icon={IconAlertSquareRounded}
         />
       ),
@@ -122,7 +122,7 @@ export const projectsColumns = (
       id: 'status',
       accessorKey: 'status',
       header: () => (
-        <RecordTable.InlineHead label="Status" icon={IconProgressCheck} />
+        <RecordTable.InlineHead label="状态" icon={IconProgressCheck} />
       ),
       cell: ({ cell }) => {
         return (
@@ -138,7 +138,7 @@ export const projectsColumns = (
     {
       id: 'teamIds',
       header: () => (
-        <RecordTable.InlineHead label="Team" icon={IconUsersGroup} />
+        <RecordTable.InlineHead label="团队" icon={IconUsersGroup} />
       ),
       cell: ({ cell }) => {
         return (
@@ -153,7 +153,7 @@ export const projectsColumns = (
     },
     {
       id: 'leadId',
-      header: () => <RecordTable.InlineHead label="Lead" icon={IconUser} />,
+      header: () => <RecordTable.InlineHead label="负责人" icon={IconUser} />,
       cell: ({ cell }) => {
         return (
           <SelectLead.InlineCell
@@ -169,7 +169,7 @@ export const projectsColumns = (
       id: 'memberIds',
       accessorKey: 'memberIds',
       header: () => (
-        <RecordTable.InlineHead label="Members" icon={IconUsersGroup} />
+        <RecordTable.InlineHead label="成员" icon={IconUsersGroup} />
       ),
       cell: ({ cell }) => {
         const memberIds = cell.getValue() as string[];
@@ -223,9 +223,9 @@ export const projectsColumns = (
             scope={clsx(
               ProjectHotKeyScope.ProjectTableCell,
               cell.row.original._id,
-              'Members',
+              '成员',
             )}
-            placeholder="Members not specified"
+            placeholder="未指定成员"
           />
         );
       },
@@ -235,7 +235,7 @@ export const projectsColumns = (
       id: 'startDate',
       accessorKey: 'startDate',
       header: () => (
-        <RecordTable.InlineHead label="Start Date" icon={IconCalendarFilled} />
+        <RecordTable.InlineHead label="开始日期" icon={IconCalendarFilled} />
       ),
       cell: ({ cell }) => {
         const startDate = cell.getValue() as string;
@@ -255,7 +255,7 @@ export const projectsColumns = (
       id: 'targetDate',
       accessorKey: 'targetDate',
       header: () => (
-        <RecordTable.InlineHead label="Target Date" icon={IconCalendarFilled} />
+        <RecordTable.InlineHead label="目标日期" icon={IconCalendarFilled} />
       ),
       cell: ({ cell }) => {
         const targetDate = cell.getValue() as string;

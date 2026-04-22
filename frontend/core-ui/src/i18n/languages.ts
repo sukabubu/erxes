@@ -1,4 +1,4 @@
-import { enUS, mn } from 'date-fns/locale';
+import { enUS, mn, zhCN } from 'date-fns/locale';
 
 import { Language } from './types';
 
@@ -14,5 +14,11 @@ export const languages: Language[] = [
     display_name: 'Mongolian',
     ltr: false,
     date_locale: mn,
+  },
+  {
+    code: 'zh',
+    display_name: '中文',
+    ltr: true,
+    date_locale: zhCN,
   },
 ];

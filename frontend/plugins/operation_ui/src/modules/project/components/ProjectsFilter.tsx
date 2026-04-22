@@ -40,30 +40,30 @@ const ProjectsFilterPopover = () => {
           <Filter.View>
             <Command>
               <Filter.CommandInput
-                placeholder="Filter"
+                placeholder="筛选"
                 variant="secondary"
                 className="bg-background"
               />
               <Command.List className="p-1">
                 <Filter.Item value="name" inDialog>
                   <IconSearch />
-                  Search
+                  搜索
                 </Filter.Item>
                 <Command.Separator className="my-1" />
                 <SelectLead.FilterItem />
                 {!teamId && (
                   <Filter.Item value="team">
                     <IconUsers />
-                    Team
+                    团队
                   </Filter.Item>
                 )}
                 <Filter.Item value="priority">
                   <IconAlertSquareRounded />
-                  Priority
+                  优先级
                 </Filter.Item>
                 <Filter.Item value="status">
                   <IconProgressCheck />
-                  Status
+                  状态
                 </Filter.Item>
                 <TagsFilter />
               </Command.List>
@@ -105,7 +105,7 @@ export const ProjectsFilter = () => {
           <Filter.BarItem queryKey="name">
             <Filter.BarName>
               <IconSearch />
-              Search
+              搜索
             </Filter.BarName>
             <Filter.BarButton filterKey="name" inDialog>
               {name}
@@ -117,7 +117,7 @@ export const ProjectsFilter = () => {
           <Filter.BarItem queryKey="team">
             <Filter.BarName>
               <IconUsers />
-              Team
+              团队
             </Filter.BarName>
             <SelectTeam.FilterBar />
           </Filter.BarItem>
@@ -125,14 +125,14 @@ export const ProjectsFilter = () => {
         <Filter.BarItem queryKey="priority">
           <Filter.BarName>
             <IconAlertSquareRounded />
-            Priority
+            优先级
           </Filter.BarName>
           <SelectPriority.FilterBar />
         </Filter.BarItem>
         <Filter.BarItem queryKey="status">
           <Filter.BarName>
             <IconProgressCheck />
-            Status
+            状态
           </Filter.BarName>
           <SelectStatus.FilterBar />
         </Filter.BarItem>

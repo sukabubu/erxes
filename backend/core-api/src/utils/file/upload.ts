@@ -5,7 +5,6 @@ import {
   randomAlphanumeric,
   sanitizeFilename,
 } from 'erxes-api-shared/utils';
-import { fileTypeFromBuffer } from 'file-type/core';
 import FormData from 'form-data';
 import * as fs from 'fs';
 import fetch from 'node-fetch';
@@ -23,6 +22,12 @@ import {
   createGCS,
   uploadsFolderPath,
 } from './instance';
+
+const detectFileTypeFromBuffer = async (buffer: Buffer) => {
+  const { fileTypeFromBuffer } = await import('file-type/core');
+
+  return fileTypeFromBuffer(buffer);
+};
 
 /*
  * Save file to Cloudflare
@@ -319,7 +324,9 @@ const uploadFileCloudflare = async (
   const { CLOUDFLARE_BUCKET_NAME, CLOUDFLARE_USE_CDN } =
     await getFileUploadConfigs(models);
 
-  const detectedType = await fileTypeFromBuffer(fs.readFileSync(file.filepath));
+  const detectedType = await detectFileTypeFromBuffer(
+    fs.readFileSync(file.filepath),
+  );
 
   if (path.extname(file.originalFilename).toLowerCase() === `.jfif`) {
     file.originalFilename = file.originalFilename.replace('.jfif', '.jpeg');

@@ -25,7 +25,7 @@ export const ChannelResponsePage = () => {
                   onClick={() => navigate(-1)}
                 >
                   <IconArrowLeft size={16} className="stroke-foreground" />
-                  Channel Settings
+                  渠道设置
                 </Button>
               </Breadcrumb.Link>
             </Breadcrumb.Item>
@@ -37,7 +37,7 @@ export const ChannelResponsePage = () => {
       <div className="px-8 py-4">
         <div className="mb-6">
           {' '}
-          <h1 className="text-xl font-semibold">Response Templates</h1>
+          <h1 className="text-xl font-semibold">回复模板</h1>
         </div>
 
         <ScrollArea className="flex-1">

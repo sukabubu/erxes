@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "paths": {
+      "~/*": ["./src/*"],
+      "@/*": ["./src/modules/*"],
+      "erxes-api-shared": ["../../erxes-api-shared/dist/erxes-api-shared.cjs.d.ts"],
+      "erxes-api-shared/*": [
+        "../../erxes-api-shared/dist/declarations/src/*"
+      ]
+    },
+    "types": ["node"]
+  },
+  "exclude": ["node_modules", "dist", "**/*spec.ts"]
+}

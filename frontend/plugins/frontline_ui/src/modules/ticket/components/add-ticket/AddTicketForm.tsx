@@ -89,8 +89,8 @@ export const AddTicketForm = ({
       },
       onCompleted: (data) => {
         toast({
-          title: 'Success',
-          description: 'Ticket created successfully',
+          title: '成功',
+          description: '工单创建成功',
           variant: 'default',
         });
         onClose();
@@ -104,7 +104,7 @@ export const AddTicketForm = ({
       <form
         onSubmit={form.handleSubmit(onSubmit, (errors) => {
           toast({
-            title: 'Error',
+            title: '错误',
             description: Object.entries(errors)[0][1].message,
             variant: 'destructive',
           });
@@ -112,7 +112,7 @@ export const AddTicketForm = ({
         className="h-full flex flex-col"
       >
         <Sheet.Header className="flex items-center gap-2 ">
-          <Sheet.Title className="">New ticket</Sheet.Title>
+          <Sheet.Title className="">新建工单</Sheet.Title>
         </Sheet.Header>
         <Sheet.Content className="px-7 py-4 gap-2 flex flex-col min-h-0">
           <Form.Field
@@ -125,7 +125,7 @@ export const AddTicketForm = ({
                   <Input
                     {...field}
                     className="shadow-none focus-visible:shadow-none h-8 text-xl p-0"
-                    placeholder="Ticket Name"
+                    placeholder="工单名称"
                   />
                 </Form.Control>
               </Form.Item>
@@ -238,7 +238,7 @@ export const AddTicketForm = ({
                     <Form.Label className="sr-only">Start Date</Form.Label>
                     <SelectDateTicket.FormItem
                       value={field.value}
-                      placeholder="Start Date"
+                      placeholder="开始日期"
                       onValueChange={(value) => field.onChange(value)}
                     />
                   </Form.Item>
@@ -253,7 +253,7 @@ export const AddTicketForm = ({
                     <SelectDateTicket.FormItem
                       value={field.value}
                       onValueChange={(value) => field.onChange(value)}
-                      placeholder="Target Date"
+                      placeholder="目标日期"
                     />
                   </Form.Item>
                 )}
@@ -298,14 +298,14 @@ export const AddTicketForm = ({
               setDescriptionContent(undefined);
             }}
           >
-            Cancel
+            取消
           </Button>
           <Button
             type="submit"
             className="bg-primary text-primary-foreground hover:bg-primary/90"
             disabled={createTicketLoading}
           >
-            Save
+            保存
           </Button>
         </Sheet.Footer>
       </form>

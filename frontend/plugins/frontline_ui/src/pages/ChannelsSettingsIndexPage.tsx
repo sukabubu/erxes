@@ -5,7 +5,7 @@ export const ChannelsSettingsIndexPage = () => {
   return (
     <div className="max-h-screen">
       <div className="ml-auto flex justify-between px-8 py-6">
-        <h1 className="text-xl font-semibold">Channels</h1>
+        <h1 className="text-xl font-semibold">渠道</h1>
         <CreateChannel />
       </div>
       <Channels />

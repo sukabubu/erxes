@@ -25,7 +25,7 @@ const ResetPasswordPage = () => {
     <div className="flex items-center justify-center my-48">
       <div className="motion-preset-slide-down-md grid gap-5">
         <div className="flex flex-col items-center">
-          <h2 className="font-semibold text-2xl">Reset password</h2>
+          <h2 className="font-semibold text-2xl">重置密码</h2>
         </div>
         <ResetPassword token={token} />
       </div>
