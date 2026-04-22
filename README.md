@@ -4,7 +4,7 @@
  <img src="https://github.com/erxes/erxes/assets/1748857/53a70732-7385-475d-9cb5-efd0ec801db5" alt="erxes logo" width="20%" />
 </p>
 
-<p align="center">Experience Operating System (XOS) that unifies marketing, sales, operations, and support — run your core business seamlessly while replacing HubSpot, Zendesk, Linear, Wix and more.</p>
+<p align="center">A customized erxes workspace with Chinese UI localization, local startup fixes, and a China Leads plugin on top of the upstream Experience Operating System (XOS).</p>
 
 <p align="center">
   <a href="https://erxes.io/">Website</a>
@@ -43,6 +43,23 @@
   <strong>🎨 Module Federation</strong> •
   <strong>🔒 Self-Hosted</strong>
 </p>
+
+## This Repository
+
+This repository is a public custom fork/workspace based on the upstream `erxes/erxes` project.
+
+It currently includes:
+
+- Chinese UI localization across core screens and selected plugins
+- Local development startup fixes for Redis, MongoDB, `core-api`, and `gateway`
+- A custom China Leads plugin pair:
+  - `backend/plugins/china_leads_api`
+  - `frontend/plugins/china_leads_ui`
+
+If you are looking for the original upstream project, see:
+
+- Upstream repository: `https://github.com/erxes/erxes`
+- This customized repository: `https://github.com/sukabubu/erxes`
 
 <p align="center">
  <a href="https://erxes.io" target="_blank" rel="noopener noreferrer"><img src="https://imagedelivery.net/5m26Aj-CutMXPPNacMs_yQ/e2382b5d-cdbf-4365-7238-e79db8cb6000/public" width="100%" alt="erxes: the source available experience management infrastructure">
@@ -122,8 +139,8 @@ erxes is built as an **Nx-powered monorepo** with a modern microservices archite
 ### Installation
 
 ```bash
-# Clone the repository
-git clone https://github.com/erxes/erxes.git
+# Clone this customized repository
+git clone https://github.com/sukabubu/erxes.git
 cd erxes
 
 # Install dependencies (must use pnpm)
@@ -299,4 +316,3 @@ See the <a href="https://github.com/erxes/erxes/blob/master/LICENSE.md" >**LICEN
 
 docker compose up -d
 open http://localhost:3000
-
