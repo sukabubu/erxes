@@ -11,12 +11,26 @@ import './styles.css';
 import { App } from '@/app/components/App';
 import { ClientConfigError } from '@/error-handler/components/ClientConfigError';
 
+const devRemotes = (process.env.ENABLED_PLUGINS || '')
+  .split(',')
+  .map((plugin) => plugin.trim())
+  .filter(Boolean)
+  .map((plugin) => ({
+    name: `${plugin}_ui`,
+    entry: `http://localhost:3016/${plugin}_ui/remoteEntry.js`,
+  }));
+
 async function initFederation() {
   const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement,
   );
 
   if (NODE_ENV === 'development') {
+    init({
+      name: 'core',
+      remotes: devRemotes,
+    });
+
     root.render(
       <StrictMode>
         <App />

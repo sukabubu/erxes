@@ -2,6 +2,7 @@ import { loadRemote } from '@module-federation/enhanced/runtime';
 import { Spinner } from 'erxes-ui';
 import React, { Suspense, useEffect, useState } from 'react';
 import { RenderPluginsComponentErrorState } from './RenderPluginsComponentErrorState';
+import { getChinaLeadsLocalComponent } from '../local/chinaLeads';
 interface RemoteComponentProps {
   module?: string;
 }
@@ -25,6 +26,16 @@ export function RenderPluginsComponent({
       try {
         setIsLoading(true);
         setHasError(null);
+
+        const localComponent =
+          pluginName === 'china_leads_ui'
+            ? getChinaLeadsLocalComponent(remoteModuleName)
+            : null;
+
+        if (localComponent) {
+          setPlugin(() => localComponent);
+          return;
+        }
 
         const remoteModule = await loadRemote<{
           default: React.ComponentType<RemoteComponentProps>;

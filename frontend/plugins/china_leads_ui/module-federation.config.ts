@@ -17,13 +17,18 @@ const config: ModuleFederationConfig = {
   exposes: {
     './config': './src/config.tsx',
     './china_leads': './src/modules/ChinaLeadsMain.tsx',
+    './chinaLeads': './src/modules/ChinaLeadsMain.tsx',
     './china-leads': './src/modules/ChinaLeadsMain.tsx',
+    './ruleSets': './src/pages/ChinaLeadsSettingsPage.tsx',
     './china_leadsSettings': './src/pages/ChinaLeadsSettingsPage.tsx',
     './chinaLeadsSettings': './src/pages/ChinaLeadsSettingsPage.tsx',
   },
   shared: (libraryName, defaultConfig) => {
     if (coreLibraries.has(libraryName)) {
-      return defaultConfig;
+      return {
+        ...defaultConfig,
+        singleton: true,
+      };
     }
 
     return false;

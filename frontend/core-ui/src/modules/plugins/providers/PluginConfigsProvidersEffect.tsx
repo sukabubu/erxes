@@ -3,6 +3,7 @@ import { IUIConfig } from 'erxes-ui';
 import { useSetAtom } from 'jotai';
 import { useEffect } from 'react';
 import { loadingPluginsConfigState, pluginsConfigState } from 'ui-modules';
+import { getChinaLeadsLocalConfig } from '../../../plugins/local/chinaLeads';
 
 type RemoteConfig = {
   CONFIG: IUIConfig;
@@ -19,6 +20,17 @@ export const PluginConfigsProvidersEffect = () => {
       const loadConfig = async () => {
         for (const remote of remotes) {
           try {
+            if (remote.name === 'china_leads_ui') {
+              setPluginsConfig((prev) => ({
+                ...prev,
+                [remote.name]: getChinaLeadsLocalConfig(),
+              }));
+              setTimeout(() => {
+                setLoadingPluginsConfig(false);
+              });
+              continue;
+            }
+
             const remoteConfig = (await loadRemote(
               `${remote.name}/config`,
             )) as RemoteConfig;

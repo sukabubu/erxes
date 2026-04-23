@@ -1,5 +1,4 @@
 import { Suspense, lazy } from 'react';
-import { Route, Routes } from 'react-router';
 
 const IndexPage = lazy(() =>
   import('~/pages/ChinaLeadsIndexPage').then((module) => ({
@@ -14,13 +13,14 @@ const SettingsPage = lazy(() =>
 );
 
 const ChinaLeadsMain = () => {
+  const pathname =
+    typeof window !== 'undefined' ? window.location.pathname : '/china-leads';
+  const isRuleSetPage = pathname.includes('/china-leads/rules');
+  const ActivePage = isRuleSetPage ? SettingsPage : IndexPage;
+
   return (
     <Suspense fallback={<div />}>
-      <Routes>
-        <Route path="/" element={<IndexPage />} />
-        <Route path="/jobs" element={<IndexPage />} />
-        <Route path="/rules" element={<SettingsPage />} />
-      </Routes>
+      <ActivePage />
     </Suspense>
   );
 };
