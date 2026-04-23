@@ -43,6 +43,7 @@ const resolvers: any = {
         executorBaseUrl: doc.executorBaseUrl,
         createdBy: user?._id,
         configSnapshot: {
+          executorBaseUrl: doc.executorBaseUrl,
           cookie: doc.cookie,
           keywords: doc.keywords,
           days: doc.days,
@@ -50,6 +51,8 @@ const resolvers: any = {
           pages: doc.pages,
           count: doc.count,
           scrollLoops: doc.scrollLoops,
+          searchTimeoutMs: doc.searchTimeoutMs,
+          filterTimeoutMs: doc.filterTimeoutMs,
           extraNameExcludes: doc.extraNameExcludes,
           extraCommentExcludes: doc.extraCommentExcludes,
           positiveKeywords: doc.positiveKeywords,

@@ -7,12 +7,15 @@ export const GET_CHINA_LEAD_RULE_SETS = gql`
       name
       description
       channel
+      executorBaseUrl
       keywords
       days
       target
       pages
       count
       scrollLoops
+      searchTimeoutMs
+      filterTimeoutMs
       extraNameExcludes
       extraCommentExcludes
       positiveKeywords
@@ -56,6 +59,7 @@ export const GET_CHINA_LEAD_ITEMS = gql`
       channel
       keyword
       sourcePostUrl
+      sourceCreatedAt
       sourceAuthor
       commentNickname
       commentProfileUrl

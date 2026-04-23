@@ -9,12 +9,15 @@ export const types = `
     name: String!
     description: String
     channel: String!
+    executorBaseUrl: String
     keywords: [String!]!
     days: Int!
     target: Int!
     pages: Int!
     count: Int!
     scrollLoops: Int!
+    searchTimeoutMs: Int
+    filterTimeoutMs: Int
     extraNameExcludes: [String!]!
     extraCommentExcludes: [String!]!
     positiveKeywords: [String!]!
@@ -51,6 +54,7 @@ export const types = `
     channel: String!
     keyword: String
     sourcePostUrl: String
+    sourceCreatedAt: Date
     sourceAuthor: String
     commentNickname: String
     commentProfileUrl: String
@@ -84,12 +88,15 @@ export const types = `
     name: String!
     description: String
     channel: String!
+    executorBaseUrl: String
     keywords: [String!]!
     days: Int!
     target: Int!
     pages: Int!
     count: Int!
     scrollLoops: Int!
+    searchTimeoutMs: Int
+    filterTimeoutMs: Int
     extraNameExcludes: [String!]!
     extraCommentExcludes: [String!]!
     positiveKeywords: [String!]!
@@ -110,6 +117,8 @@ export const types = `
     pages: Int!
     count: Int!
     scrollLoops: Int!
+    searchTimeoutMs: Int
+    filterTimeoutMs: Int
     extraNameExcludes: [String!]!
     extraCommentExcludes: [String!]!
     positiveKeywords: [String!]!

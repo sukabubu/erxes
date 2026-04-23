@@ -5,7 +5,18 @@
     "paths": {
       "~/*": ["./src/*"],
       "@/*": ["./src/modules/*"],
-      "erxes-api-shared": ["../../erxes-api-shared/dist/erxes-api-shared.cjs.d.ts"],
+      "erxes-api-shared": [
+        "../../erxes-api-shared/dist/erxes-api-shared.cjs.d.ts"
+      ],
+      "erxes-api-shared/utils": [
+        "../../erxes-api-shared/utils/dist/erxes-api-shared-utils.cjs.d.ts"
+      ],
+      "erxes-api-shared/core-types": [
+        "../../erxes-api-shared/core-types/dist/erxes-api-shared-core-types.cjs.d.ts"
+      ],
+      "erxes-api-shared/core-modules": [
+        "../../erxes-api-shared/core-modules/dist/erxes-api-shared-core-modules.cjs.d.ts"
+      ],
       "erxes-api-shared/*": [
         "../../erxes-api-shared/dist/declarations/src/*"
       ]

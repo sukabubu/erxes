@@ -194,6 +194,13 @@ ENABLED_PLUGINS=operation,sales,frontline,china_leads
 CHINA_LEADS_EXECUTOR_URL=http://127.0.0.1:4318
 ```
 
+Important: the executor should be started with `bash start.sh`, not just `node server.js` or `npm start`, because scraping depends on the local comment API service on `127.0.0.1:5555`.
+
+```bash
+cd /Users/mega/xiansuodouyin
+bash start.sh
+```
+
 Then start the stack:
 
 ```bash

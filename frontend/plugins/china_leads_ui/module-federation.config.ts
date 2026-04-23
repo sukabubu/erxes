@@ -16,7 +16,9 @@ const config: ModuleFederationConfig = {
   name: 'china_leads_ui',
   exposes: {
     './config': './src/config.tsx',
+    './china_leads': './src/modules/ChinaLeadsMain.tsx',
     './china-leads': './src/modules/ChinaLeadsMain.tsx',
+    './china_leadsSettings': './src/pages/ChinaLeadsSettingsPage.tsx',
     './chinaLeadsSettings': './src/pages/ChinaLeadsSettingsPage.tsx',
   },
   shared: (libraryName, defaultConfig) => {

@@ -6,6 +6,7 @@ export const ADD_CHINA_LEAD_RULE_SET = gql`
       _id
       name
       channel
+      executorBaseUrl
       keywords
     }
   }

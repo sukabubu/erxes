@@ -8,12 +8,15 @@ export type TChinaLeadRuleSet = {
   name: string;
   description?: string;
   channel: string;
+  executorBaseUrl?: string;
   keywords: string[];
   days: number;
   target: number;
   pages: number;
   count: number;
   scrollLoops: number;
+  searchTimeoutMs?: number;
+  filterTimeoutMs?: number;
   extraNameExcludes: string[];
   extraCommentExcludes: string[];
   positiveKeywords: string[];
@@ -46,6 +49,7 @@ export type TChinaLeadItem = {
   channel: string;
   keyword?: string;
   sourcePostUrl?: string;
+  sourceCreatedAt?: string;
   sourceAuthor?: string;
   commentNickname?: string;
   commentProfileUrl?: string;

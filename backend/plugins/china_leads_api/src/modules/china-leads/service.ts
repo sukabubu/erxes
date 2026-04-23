@@ -1,3 +1,4 @@
+import { createHash } from 'crypto';
 import { sendTRPCMessage } from 'erxes-api-shared/utils';
 import { IModels } from '~/connectionResolvers';
 import { LeadExecutorClient, TExecutorJobState } from './executor/client';
@@ -12,6 +13,25 @@ const toDate = (value?: string) => {
   return Number.isNaN(date.getTime()) ? undefined : date;
 };
 
+const toSyntheticCommentUserId = (row: Record<string, any>) => {
+  const fallbackParts = [
+    row.comment_profile_url,
+    row.comment_nickname,
+    row.comment_text,
+    row.source_video_id,
+    row.source_video_url,
+    row.keyword,
+  ]
+    .map((value) => `${value || ''}`.trim())
+    .filter(Boolean);
+
+  if (!fallbackParts.length) {
+    return '';
+  }
+
+  return `synthetic:${createHash('sha1').update(fallbackParts.join('|')).digest('hex')}`;
+};
+
 const toLeadItem = (jobId: string, channel: TLeadChannel, row: Record<string, any>): ILeadItem => ({
   jobId,
   channel,
@@ -21,7 +41,7 @@ const toLeadItem = (jobId: string, channel: TLeadChannel, row: Record<string, an
   sourceAuthor: row.source_video_author || row.sourceAuthor || '',
   sourceContent: row.source_video_desc || row.sourceContent || '',
   sourceCreatedAt: toDate(row.source_video_create_time || row.sourceCreatedAt),
-  commentUserId: row.comment_unique_id || row.commentUserId || '',
+  commentUserId: row.comment_unique_id || row.commentUserId || toSyntheticCommentUserId(row),
   commentNickname: row.comment_nickname || row.commentNickname || '',
   commentProfileUrl: row.comment_profile_url || row.commentProfileUrl || '',
   commentText: row.comment_text || row.commentText || '',
@@ -101,13 +121,82 @@ const computeScore = (
   return { score, matchedRules };
 };
 
+const toPositiveNumber = (value: any, fallback: number) => {
+  const numberValue = Number(value);
+
+  return Number.isFinite(numberValue) && numberValue > 0
+    ? numberValue
+    : fallback;
+};
+
+const parseIdList = (value?: string) =>
+  `${value || ''}`
+    .split(',')
+    .map((item) => item.trim())
+    .filter(Boolean);
+
+const formatLeadTimestamp = (value?: Date) => {
+  if (!value) {
+    return '';
+  }
+
+  const date = new Date(value);
+
+  return Number.isNaN(date.getTime()) ? '' : date.toISOString();
+};
+
+const buildLeadDescription = (item: ILeadItem) => {
+  const lines = [
+    '来源渠道: 抖音',
+    `抖音昵称: ${item.commentNickname || '未提供'}`,
+    `抖音主页: ${item.commentProfileUrl || '未提供'}`,
+    `关联视频: ${item.sourcePostUrl || '未提供'}`,
+    `视频发布时间: ${formatLeadTimestamp(item.sourceCreatedAt) || '未提供'}`,
+    `命中关键词: ${item.keyword || item.channel}`,
+    `评论内容: ${item.commentText || '未提供'}`,
+    `地区: ${item.ipLocation || '未提供'}`,
+    '',
+    '建议跟进漏斗: 抖音触达 -> 转微信 -> 电话沟通 -> 线下拜访 -> 成交',
+  ];
+
+  return lines.join('\n');
+};
+
+const resolveSalesStage = async (subdomain: string) => {
+  const explicitStageId = process.env.CHINA_LEADS_DEFAULT_STAGE_ID;
+
+  if (explicitStageId) {
+    return { stageId: explicitStageId };
+  }
+
+  const stageResponse = await sendTRPCMessage({
+    subdomain,
+    pluginName: 'sales',
+    method: 'query',
+    module: 'stage',
+    action: 'find',
+    input: {
+      type: 'deal',
+      status: 'active',
+    },
+    defaultValue: { data: [] },
+  }).catch(() => ({ data: [] }));
+
+  const [firstStage] = stageResponse?.data || [];
+
+  return {
+    stageId: firstStage?._id,
+  };
+};
+
 export const runJobWithExecutor = async (models: IModels, jobId: string) => {
   const job = await models.ChinaLeadJobs.getJob(jobId);
-  const executor = new LeadExecutorClient({
-    baseUrl: job.executorBaseUrl,
-  });
-
   const config = job.configSnapshot || {};
+  const executor = new LeadExecutorClient({
+    baseUrl: job.executorBaseUrl || config.executorBaseUrl,
+  });
+  const searchTimeoutMs = toPositiveNumber(config.searchTimeoutMs, 180000);
+  const filterTimeoutMs = toPositiveNumber(config.filterTimeoutMs, 180000);
 
   await models.ChinaLeadJobs.updateJob(jobId, {
     status: 'running',
@@ -123,8 +212,8 @@ export const runJobWithExecutor = async (models: IModels, jobId: string) => {
     pages: Number(config.pages || 2),
     count: Number(config.count || 50),
     scrollLoops: Number(config.scrollLoops || 28),
-    searchTimeoutMs: Number(config.searchTimeoutMs || 45000),
-    filterTimeoutMs: Number(config.filterTimeoutMs || 45000),
+    searchTimeoutMs,
+    filterTimeoutMs,
     extraNameExcludes: config.extraNameExcludes || [],
     extraCommentExcludes: config.extraCommentExcludes || [],
   });
@@ -140,7 +229,14 @@ export const runJobWithExecutor = async (models: IModels, jobId: string) => {
   });
 
   let jobState: TExecutorJobState | null = null;
-  for (let index = 0; index < 120; index += 1) {
+  const pollIntervalMs = 1000;
+  const executorWaitMs = Math.max(
+    searchTimeoutMs + filterTimeoutMs + 60000,
+    120000,
+  );
+  const deadline = Date.now() + executorWaitMs;
+
+  while (Date.now() < deadline) {
     const response = await executor.getJob(executorJobId);
     jobState = response?.job || null;
 
@@ -152,11 +248,14 @@ export const runJobWithExecutor = async (models: IModels, jobId: string) => {
       throw new Error(jobState.error || 'Executor job failed');
     }
 
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, pollIntervalMs));
   }
 
   if (!jobState || jobState.status !== 'succeeded') {
-    throw new Error('Executor job timed out');
+    const minutes = Math.ceil(executorWaitMs / 60000);
+    throw new Error(
+      `Executor job timed out after ${minutes} minutes; executorJobId=${executorJobId}`,
+    );
   }
 
   const result = await executor.getResult(executorJobId);
@@ -213,6 +312,9 @@ export const syncJobItems = async (
     dealIds: [],
   };
 
+  const { stageId } = await resolveSalesStage(subdomain);
+  const assignedUserIds = parseIdList(process.env.CHINA_LEADS_ASSIGNED_USER_IDS);
+
   for (const item of items) {
     try {
       if (!item.commentNickname && !item.commentUserId && !item.commentText) {
@@ -232,33 +334,63 @@ export const syncJobItems = async (
         action: 'createCustomer',
         input: {
           doc: {
-            firstName: item.commentNickname,
+            state: 'lead',
+            firstName: '',
+            lastName: '',
             primaryPhone: '',
             primaryEmail: '',
-            visitorContactInfo: {
-              source: `china-leads:${item.channel}`,
-              profileUrl: item.commentProfileUrl,
-              keyword: item.keyword,
-              commentText: item.commentText,
+            description: '抖音线索，待销售补充微信、电话和真实姓名。',
+            links: {
+              douyinProfile: item.commentProfileUrl || '',
+              douyinVideo: item.sourcePostUrl || '',
+            },
+            data: {
+              source: 'douyin',
+              sourceLabel: '抖音',
+              douyinNickname: item.commentNickname || '',
+              douyinProfileUrl: item.commentProfileUrl || '',
+              douyinVideoUrl: item.sourcePostUrl || '',
+              douyinCommentText: item.commentText || '',
+              douyinKeyword: item.keyword || '',
+              douyinPublishedAt: formatLeadTimestamp(item.sourceCreatedAt),
             },
           },
         },
       });
 
-      const dealResponse = await sendTRPCMessage({
-        subdomain,
-        pluginName: 'sales',
-        method: 'mutation',
-        module: 'deal',
-        action: 'create',
-        input: {
-          name: `${item.commentNickname || '匿名线索'} - ${item.keyword || item.channel}`,
-          customerIds: customer?._id ? [customer._id] : [],
-          stageId: process.env.CHINA_LEADS_DEFAULT_STAGE_ID,
-          description: item.commentText,
-          source: item.channel,
-        },
-      }).catch(() => null);
+      const dealResponse = stageId
+        ? await sendTRPCMessage({
+            subdomain,
+            pluginName: 'sales',
+            method: 'mutation',
+            module: 'deal',
+            action: 'create',
+            input: {
+              name: `[抖音线索] ${item.commentNickname || '匿名用户'} - ${item.keyword || item.channel}`,
+              customerIds: customer?._id ? [customer._id] : [],
+              stageId,
+              assignedUserIds,
+              description: buildLeadDescription(item),
+              extraData: {
+                source: 'douyin',
+                sourceLabel: '抖音',
+                channel: item.channel,
+                commentNickname: item.commentNickname || '',
+                commentProfileUrl: item.commentProfileUrl || '',
+                sourcePostUrl: item.sourcePostUrl || '',
+                sourceCreatedAt: formatLeadTimestamp(item.sourceCreatedAt),
+                keyword: item.keyword || '',
+                funnelModel: [
+                  '抖音触达',
+                  '转微信',
+                  '电话沟通',
+                  '线下拜访',
+                  '成交',
+                ],
+              },
+            },
+          }).catch(() => null)
+        : null;
 
       const dealId = dealResponse?.data?._id;
       const customerId = customer?._id;

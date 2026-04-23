@@ -14,12 +14,15 @@ export interface IRuleSet {
   name: string;
   description?: string;
   channel: TLeadChannel;
+  executorBaseUrl?: string;
   keywords: string[];
   days: number;
   target: number;
   pages: number;
   count: number;
   scrollLoops: number;
+  searchTimeoutMs?: number;
+  filterTimeoutMs?: number;
   extraNameExcludes: string[];
   extraCommentExcludes: string[];
   positiveKeywords?: string[];
