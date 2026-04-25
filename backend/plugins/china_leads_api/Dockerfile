@@ -1,12 +1,38 @@
-FROM node:18-alpine
+FROM node:22-alpine3.22 AS installer
+WORKDIR /app
+RUN npm install -g pnpm@9
 
+COPY pnpm-workspace.yaml pnpm-lock.yaml package.json ./
+COPY backend/plugins/china_leads_api/package.json backend/plugins/china_leads_api/
+COPY backend/erxes-api-shared/package.json backend/erxes-api-shared/
+RUN pnpm install --prod --shamefully-hoist \
+    && find node_modules -type f \( \
+         -name "*.d.ts" -o -name "*.map" -o -name "*.md" \
+         -o -name "LICENSE*" -o -name "LICENCE*" \
+         -o -name "CHANGELOG*" -o -name "README*" \
+         -o -name "CONTRIBUTING*" -o -name "AUTHORS*" \
+         -o -name ".npmignore" -o -name ".eslintrc*" -o -name "Makefile" \
+       \) -delete \
+    && find node_modules -mindepth 2 -maxdepth 3 -type d \( \
+         -name "test" -o -name "tests" -o -name "__tests__" -o -name "spec" \
+         -o -name "docs" -o -name "doc" -o -name "examples" -o -name "example" \
+         -o -name ".github" -o -name "coverage" \
+       \) -prune -exec rm -rf {} \; 2>/dev/null || true
+
+FROM node:22-alpine3.22
 WORKDIR /app
 
-COPY backend/erxes-api-shared/dist ./erxes-api-shared/dist
-COPY backend/plugins/china_leads_api/dist ./china_leads_api/dist
-COPY backend/plugins/china_leads_api/package.json ./china_leads_api/
+COPY --from=installer /app/node_modules ./node_modules
 
-RUN cd china_leads_api && npm install --production
+RUN rm -rf ./node_modules/erxes-api-shared
+COPY backend/erxes-api-shared/dist ./node_modules/erxes-api-shared/dist
+COPY backend/erxes-api-shared/utils ./node_modules/erxes-api-shared/utils
+COPY backend/erxes-api-shared/core-types ./node_modules/erxes-api-shared/core-types
+COPY backend/erxes-api-shared/core-modules ./node_modules/erxes-api-shared/core-modules
+COPY backend/erxes-api-shared/package.json ./node_modules/erxes-api-shared/
 
-WORKDIR /app/china_leads_api
-CMD ["node", "dist/main.js"]
+COPY backend/plugins/china_leads_api/dist ./dist
+
+ENV NODE_ENV=production
+USER 1000
+CMD ["node", "dist/src/main.js"]

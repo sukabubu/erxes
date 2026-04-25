@@ -60,5 +60,15 @@ export type TChinaLeadItem = {
   syncStatus: string;
   syncError?: string;
   customerId?: string;
+  customerLink?: string;
+  customerOwnerId?: string;
+  customerTagIds?: string[];
+  customerSyncAction?: 'created' | 'updated';
   dealId?: string;
+  dealLink?: string;
+  dealStageId?: string;
+  dealStageName?: string;
+  dealSyncAction?: 'created' | 'updated';
+  funnelStageKey?: string;
+  funnelStageLabel?: string;
 };

@@ -2,6 +2,9 @@
 FROM --platform=linux/amd64 node:22-bookworm AS build
 
 WORKDIR /app
+ENV CI=true
+ENV NX_DAEMON=false
+ENV NODE_OPTIONS=--max-old-space-size=1536
 
 # Copy root files
 COPY ./package.json ./pnpm-lock.yaml ./pnpm-workspace.yaml ./tsconfig.base.json ./nx.json /app/
@@ -12,7 +15,7 @@ COPY ./backend/erxes-api-shared/package.json /app/backend/erxes-api-shared/
 
 # Install pnpm and dependencies
 RUN npm install -g pnpm
-RUN pnpm install
+RUN pnpm install --frozen-lockfile --child-concurrency=1
 
 # Copy source files
 COPY ./backend/gateway /app/backend/gateway

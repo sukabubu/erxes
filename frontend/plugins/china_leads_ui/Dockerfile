@@ -7,39 +7,33 @@ RUN apk add --no-cache alpine-sdk && \
     make check && \
     make install
 
-# Build the application
 FROM node:22-alpine AS build
 WORKDIR /app
 ENV CI=true
 ENV NX_DAEMON=false
 ENV NODE_OPTIONS=--max-old-space-size=1536
+
 COPY package.json pnpm-lock.yaml ./
 RUN npm install -g pnpm && pnpm install --frozen-lockfile --child-concurrency=1
-COPY . .
-RUN pnpm nx build core-ui --configuration=production --verbose
 
-# Final stage
+COPY . .
+RUN pnpm nx build china_leads_ui --configuration=production --verbose
+
 FROM nginx:alpine
 
-# Copy jo from builder
 COPY --from=jo-builder /usr/local/bin/jo /usr/local/bin/jo
 
 RUN apk add --no-cache bash
 
-# Copy application files
-COPY --from=build /app/dist/frontend/core-ui /usr/share/nginx/html
-
-# Copy configuration files
+COPY --from=build /app/dist/frontend/plugins/china_leads_ui /usr/share/nginx/html
 COPY --from=build /app/frontend/core-ui/nginx/nginx.conf /etc/nginx/nginx.conf
 COPY --from=build /app/frontend/core-ui/nginx/default.conf /etc/nginx/conf.d/default.conf
 COPY --from=build /app/frontend/core-ui/docker-entrypoint.sh /usr/local/bin/
 
-# Set up entrypoint script
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh && \
     chmod +x /usr/local/bin/jo && \
     mkdir -p /usr/share/nginx/html/js
 
-# Expose port 80
 EXPOSE 80
 
 ENTRYPOINT ["sh", "/usr/local/bin/docker-entrypoint.sh"]

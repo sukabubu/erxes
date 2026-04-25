@@ -81,7 +81,17 @@ export interface ILeadItem {
   syncStatus: TSyncStatus;
   syncError?: string;
   customerId?: string;
+  customerLink?: string;
+  customerOwnerId?: string;
+  customerTagIds?: string[];
+  customerSyncAction?: 'created' | 'updated';
   dealId?: string;
+  dealLink?: string;
+  dealStageId?: string;
+  dealStageName?: string;
+  dealSyncAction?: 'created' | 'updated';
+  funnelStageKey?: string;
+  funnelStageLabel?: string;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -96,6 +106,10 @@ export interface ISyncResult {
   synced: number;
   skipped: number;
   failed: number;
+  createdCustomers: number;
+  updatedCustomers: number;
+  createdDeals: number;
+  updatedDeals: number;
   customerIds: string[];
   dealIds: string[];
 }

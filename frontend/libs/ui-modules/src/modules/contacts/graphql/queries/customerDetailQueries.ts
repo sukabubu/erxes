@@ -27,6 +27,8 @@ export const CUSTOMER_DETAIL = gql`
       primaryPhone
       score
       code
+      links
+      data
       companies {
         _id
         avatar

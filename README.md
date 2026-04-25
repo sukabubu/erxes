@@ -215,6 +215,31 @@ The plugin is intended to manage:
 - scraped comment items
 - syncing captured leads into erxes contacts and deals
 
+### One-Click Production Deploy
+
+For a single-server deployment of this customized fork, the repository now includes:
+
+- `scripts/deploy-china-leads.sh`
+- `deploy/china-leads/docker-compose.prod.yml`
+- `deploy/china-leads/nginx/default.conf`
+- `.env.production.example`
+
+Quick steps:
+
+```bash
+cp .env.production.example .env.production
+# edit DOMAIN and CHINA_LEADS_EXECUTOR_URL
+
+./deploy.sh
+```
+
+Notes:
+
+- The script prebuilds required backend services, then runs Docker Compose.
+- `china_leads_ui` is self-hosted at `${DOMAIN}/plugins/china_leads_ui/remoteEntry.js`.
+- `CHINA_LEADS_EXECUTOR_URL` must point to your separately deployed scraper executor (`xiansuodouyin`), because that service is not part of this repository.
+- On servers with 4G memory, the script automatically switches to low-memory mode, reduces build parallelism, and creates swap unless you disable it.
+
 For direct backend testing:
 
 - GraphQL management queries and mutations require a logged-in erxes user session

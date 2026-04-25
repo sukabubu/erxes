@@ -54,12 +54,12 @@ export const initApolloServer = async (app, httpServer) => {
     '/graphql',
     expressMiddleware(apolloServer, {
       context: generateApolloContext<IMainContext>(
-        async (subdomain, context) => {
+        async (subdomain, context, _req, _res): Promise<IMainContext> => {
           const models = await generateModels(subdomain, context);
 
           context.models = models;
 
-          return context;
+          return context as IMainContext;
         },
       ),
     }),

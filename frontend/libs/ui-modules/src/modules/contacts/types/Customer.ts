@@ -15,6 +15,7 @@ export interface ICustomerInline {
 export interface ICustomer extends ICustomerInline {
   type?: CustomerType;
   links?: object;
+  data?: Record<string, unknown>;
   code?: string;
   emailValidationStatus?: ValidationStatus;
   phoneValidationStatus?: ValidationStatus;

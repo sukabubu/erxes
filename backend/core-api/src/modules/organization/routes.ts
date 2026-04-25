@@ -20,6 +20,21 @@ const callbackLimiter = rateLimit({
 
 const router: Router = Router();
 
+const getFrontendPluginEntry = async (
+  pluginName: string,
+  version: string,
+): Promise<string> => {
+  if (pluginName === 'china_leads') {
+    const customEntry = getEnv({ name: 'CHINA_LEADS_UI_ENTRY_URL' });
+
+    if (customEntry) {
+      return customEntry;
+    }
+  }
+
+  return `https://plugins.erxes.io/${version}/${pluginName}_ui/remoteEntry.js`;
+};
+
 router.get('/initial-setup', async (req: Request, res: Response) => {
   const subdomain = getSubdomain(req);
   const models = await generateModels(subdomain);
@@ -100,7 +115,7 @@ router.get('/get-frontend-plugins', async (_req: Request, res: Response) => {
           const version = await getPluginVersion(pluginName);
           remotes.push({
             name: `${pluginName}_ui`,
-            entry: `https://plugins.erxes.io/${version}/${pluginName}_ui/remoteEntry.js`,
+            entry: await getFrontendPluginEntry(pluginName, version),
           });
         }
       }
@@ -112,7 +127,7 @@ router.get('/get-frontend-plugins', async (_req: Request, res: Response) => {
       const agentVersion = await getPluginVersion('agent');
       remotes.push({
         name: 'agent_ui',
-        entry: `https://plugins.erxes.io/${agentVersion}/agent_ui/remoteEntry.js`,
+        entry: await getFrontendPluginEntry('agent', agentVersion),
       });
     }
 
@@ -125,7 +140,7 @@ router.get('/get-frontend-plugins', async (_req: Request, res: Response) => {
         const version = await getPluginVersion(plugin);
         remotes.push({
           name: `${plugin}_ui`,
-          entry: `https://plugins.erxes.io/${version}/${plugin}_ui/remoteEntry.js`,
+          entry: await getFrontendPluginEntry(plugin, version),
         });
       }
     }

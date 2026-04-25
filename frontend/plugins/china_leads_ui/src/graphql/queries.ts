@@ -70,7 +70,17 @@ export const GET_CHINA_LEAD_ITEMS = gql`
       syncStatus
       syncError
       customerId
+      customerLink
+      customerOwnerId
+      customerTagIds
+      customerSyncAction
       dealId
+      dealLink
+      dealStageId
+      dealStageName
+      dealSyncAction
+      funnelStageKey
+      funnelStageLabel
     }
   }
 `;

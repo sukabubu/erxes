@@ -36,6 +36,7 @@ export const types = `
     visitorContactInfo: JSON
     trackedData: JSON
     propertiesData: JSON
+    data: JSON
     ownerId: String
     position: String
     department: String

@@ -29,10 +29,16 @@ const toSyntheticCommentUserId = (row: Record<string, any>) => {
     return '';
   }
 
-  return `synthetic:${createHash('sha1').update(fallbackParts.join('|')).digest('hex')}`;
+  return `synthetic:${createHash('sha1')
+    .update(fallbackParts.join('|'))
+    .digest('hex')}`;
 };
 
-const toLeadItem = (jobId: string, channel: TLeadChannel, row: Record<string, any>): ILeadItem => ({
+const toLeadItem = (
+  jobId: string,
+  channel: TLeadChannel,
+  row: Record<string, any>,
+): ILeadItem => ({
   jobId,
   channel,
   keyword: row.keyword || '',
@@ -41,7 +47,8 @@ const toLeadItem = (jobId: string, channel: TLeadChannel, row: Record<string, an
   sourceAuthor: row.source_video_author || row.sourceAuthor || '',
   sourceContent: row.source_video_desc || row.sourceContent || '',
   sourceCreatedAt: toDate(row.source_video_create_time || row.sourceCreatedAt),
-  commentUserId: row.comment_unique_id || row.commentUserId || toSyntheticCommentUserId(row),
+  commentUserId:
+    row.comment_unique_id || row.commentUserId || toSyntheticCommentUserId(row),
   commentNickname: row.comment_nickname || row.commentNickname || '',
   commentProfileUrl: row.comment_profile_url || row.commentProfileUrl || '',
   commentText: row.comment_text || row.commentText || '',
@@ -160,6 +167,541 @@ const buildLeadDescription = (item: ILeadItem) => {
   ];
 
   return lines.join('\n');
+};
+
+const DEFAULT_CUSTOMER_DESCRIPTION =
+  '抖音线索，待销售补充微信、电话和真实姓名。';
+
+const FUNNEL_MODEL = ['抖音触达', '转微信', '电话沟通', '线下拜访', '成交'];
+
+const LEAD_STATUS_LABELS: Record<string, string> = {
+  new: '待触达',
+  attemptedToContact: '已触达',
+  inProgress: '跟进中',
+  badTiming: '暂缓跟进',
+  unqualified: '无效线索',
+  '': '待触达',
+};
+
+const uniqueStrings = (values: Array<string | undefined | null>) =>
+  Array.from(new Set(values.filter(Boolean).map((value) => `${value}`.trim())));
+
+const toLeadIdentity = (item: ILeadItem) => {
+  const rawIdentity =
+    item.commentUserId ||
+    item.commentProfileUrl ||
+    item.sourcePostId ||
+    item.sourcePostUrl ||
+    `${item.commentNickname || ''}|${item.commentText || ''}|${
+      item.keyword || ''
+    }`;
+
+  return `douyin:${createHash('sha1').update(rawIdentity).digest('hex')}`;
+};
+
+const getCustomerLink = (customerId?: string) =>
+  customerId ? `/contacts/customers?contactId=${customerId}` : '';
+
+const normalizeTagName = (prefix: string, value?: string) => {
+  const normalized = `${value || ''}`.replace(/\s+/g, ' ').trim();
+
+  if (!normalized) {
+    return prefix;
+  }
+
+  return `${prefix} ${normalized.slice(0, 48)}`;
+};
+
+const buildCustomerData = (
+  item: ILeadItem,
+  existingData: Record<string, any> = {},
+) => ({
+  ...existingData,
+  leadSource: 'china_leads',
+  source: 'douyin',
+  sourceLabel: '抖音',
+  channel: item.channel,
+  douyinCommentUserId:
+    item.commentUserId || existingData.douyinCommentUserId || '',
+  douyinNickname: item.commentNickname || existingData.douyinNickname || '',
+  douyinProfileUrl:
+    item.commentProfileUrl || existingData.douyinProfileUrl || '',
+  douyinVideoUrl: item.sourcePostUrl || existingData.douyinVideoUrl || '',
+  douyinCommentText: item.commentText || existingData.douyinCommentText || '',
+  douyinKeyword: item.keyword || existingData.douyinKeyword || '',
+  douyinPublishedAt:
+    formatLeadTimestamp(item.sourceCreatedAt) ||
+    existingData.douyinPublishedAt ||
+    '',
+  funnelStageKey: existingData.funnelStageKey || 'new',
+  funnelStageLabel: existingData.funnelStageLabel || LEAD_STATUS_LABELS.new,
+});
+
+const buildDealExtraData = (
+  item: ILeadItem,
+  customerId?: string,
+  existingExtraData: Record<string, any> = {},
+) => ({
+  ...existingExtraData,
+  externalLeadKey: existingExtraData.externalLeadKey || toLeadIdentity(item),
+  leadSource: 'china_leads',
+  source: 'douyin',
+  sourceLabel: '抖音',
+  channel: item.channel,
+  customerId: customerId || existingExtraData.customerId || '',
+  douyinCommentUserId:
+    item.commentUserId || existingExtraData.douyinCommentUserId || '',
+  commentNickname:
+    item.commentNickname || existingExtraData.commentNickname || '',
+  commentProfileUrl:
+    item.commentProfileUrl || existingExtraData.commentProfileUrl || '',
+  sourcePostUrl: item.sourcePostUrl || existingExtraData.sourcePostUrl || '',
+  sourceCreatedAt:
+    formatLeadTimestamp(item.sourceCreatedAt) ||
+    existingExtraData.sourceCreatedAt ||
+    '',
+  keyword: item.keyword || existingExtraData.keyword || '',
+  ipLocation: item.ipLocation || existingExtraData.ipLocation || '',
+  funnelStageKey: existingExtraData.funnelStageKey || 'new',
+  funnelStageLabel:
+    existingExtraData.funnelStageLabel || LEAD_STATUS_LABELS.new,
+  funnelModel: existingExtraData.funnelModel || FUNNEL_MODEL,
+});
+
+const ensureTag = async (
+  subdomain: string,
+  data: {
+    name: string;
+    type: string;
+    colorCode?: string;
+    parentId?: string;
+    isGroup?: boolean;
+    description?: string;
+  },
+) => {
+  const existing = await sendTRPCMessage({
+    subdomain,
+    pluginName: 'core',
+    method: 'query',
+    module: 'tags',
+    action: 'findOne',
+    input: {
+      query: {
+        name: data.name,
+        type: data.type,
+      },
+    },
+    defaultValue: null,
+  }).catch(() => null);
+
+  if (existing?._id) {
+    return existing;
+  }
+
+  const created = await sendTRPCMessage({
+    subdomain,
+    pluginName: 'core',
+    method: 'mutation',
+    module: 'tags',
+    action: 'create',
+    input: {
+      data,
+    },
+    defaultValue: null,
+  }).catch(async () => {
+    return sendTRPCMessage({
+      subdomain,
+      pluginName: 'core',
+      method: 'query',
+      module: 'tags',
+      action: 'findOne',
+      input: {
+        query: {
+          name: data.name,
+          type: data.type,
+        },
+      },
+      defaultValue: null,
+    }).catch(() => null);
+  });
+
+  return created;
+};
+
+const ensureLeadTags = async (subdomain: string, item: ILeadItem) => {
+  const group = await ensureTag(subdomain, {
+    name: 'China Leads CRM',
+    type: 'customer',
+    isGroup: true,
+    colorCode: '#2563eb',
+    description: 'China Leads 自动创建的客户标签分组',
+  });
+
+  const tagSpecs = [
+    {
+      name: 'China Leads 来源 抖音',
+      type: 'customer',
+      colorCode: '#f97316',
+      parentId: group?._id,
+    },
+    {
+      name: 'China Leads 状态 待触达',
+      type: 'customer',
+      colorCode: '#7c3aed',
+      parentId: group?._id,
+    },
+    item.keyword
+      ? {
+          name: normalizeTagName('China Leads 关键词', item.keyword),
+          type: 'customer',
+          colorCode: '#0f766e',
+          parentId: group?._id,
+        }
+      : null,
+  ].filter(Boolean) as Array<{
+    name: string;
+    type: string;
+    colorCode?: string;
+    parentId?: string;
+  }>;
+
+  const tags = await Promise.all(
+    tagSpecs.map((tag) => ensureTag(subdomain, tag)),
+  );
+
+  return uniqueStrings(tags.map((tag) => tag?._id));
+};
+
+const findExistingCustomer = async (subdomain: string, item: ILeadItem) => {
+  if (item.customerId) {
+    const customer = await sendTRPCMessage({
+      subdomain,
+      pluginName: 'core',
+      method: 'query',
+      module: 'customers',
+      action: 'findOne',
+      input: {
+        query: {
+          _id: item.customerId,
+        },
+      },
+      defaultValue: null,
+    }).catch(() => null);
+
+    if (customer?._id) {
+      return customer;
+    }
+  }
+
+  const conditions: Record<string, any>[] = [];
+
+  if (item.commentUserId) {
+    conditions.push({ 'data.douyinCommentUserId': item.commentUserId });
+  }
+
+  if (item.commentProfileUrl) {
+    conditions.push({ 'data.douyinProfileUrl': item.commentProfileUrl });
+    conditions.push({ 'links.douyinProfile': item.commentProfileUrl });
+  }
+
+  if (!conditions.length) {
+    return null;
+  }
+
+  const customers = await sendTRPCMessage({
+    subdomain,
+    pluginName: 'core',
+    method: 'query',
+    module: 'customers',
+    action: 'find',
+    input: {
+      query: {
+        status: { $ne: 'deleted' },
+        $or: conditions,
+      },
+    },
+    defaultValue: [],
+  }).catch(() => []);
+
+  return customers?.[0] || null;
+};
+
+const upsertCustomerFromLead = async (
+  subdomain: string,
+  item: ILeadItem,
+  assignedUserIds: string[],
+  leadTagIds: string[],
+) => {
+  const existingCustomer = await findExistingCustomer(subdomain, item);
+  const existingLinks = existingCustomer?.links || {};
+  const nextTagIds = uniqueStrings([
+    ...(existingCustomer?.tagIds || []),
+    ...leadTagIds,
+  ]);
+  const ownerId = existingCustomer?.ownerId || assignedUserIds[0] || '';
+  const customerDoc = {
+    state: existingCustomer?.state === 'customer' ? 'customer' : 'lead',
+    leadStatus: existingCustomer?.leadStatus || 'new',
+    firstName: existingCustomer?.firstName || '',
+    lastName: existingCustomer?.lastName || '',
+    primaryPhone: existingCustomer?.primaryPhone || '',
+    primaryEmail: existingCustomer?.primaryEmail || '',
+    ownerId,
+    description: existingCustomer?.description || DEFAULT_CUSTOMER_DESCRIPTION,
+    tagIds: nextTagIds,
+    links: {
+      ...existingLinks,
+      douyinProfile:
+        item.commentProfileUrl || existingLinks.douyinProfile || '',
+      douyinVideo: item.sourcePostUrl || existingLinks.douyinVideo || '',
+    },
+    data: buildCustomerData(item, existingCustomer?.data || {}),
+  };
+
+  const customer = existingCustomer?._id
+    ? await sendTRPCMessage({
+        subdomain,
+        pluginName: 'core',
+        method: 'mutation',
+        module: 'customers',
+        action: 'updateCustomer',
+        input: {
+          _id: existingCustomer._id,
+          doc: customerDoc,
+        },
+      })
+    : await sendTRPCMessage({
+        subdomain,
+        pluginName: 'core',
+        method: 'mutation',
+        module: 'customers',
+        action: 'createCustomer',
+        input: {
+          doc: customerDoc,
+        },
+      });
+
+  return {
+    customer,
+    action: existingCustomer?._id ? 'updated' : 'created',
+  };
+};
+
+const findExistingDeal = async (
+  subdomain: string,
+  item: ILeadItem,
+  customerId?: string,
+) => {
+  if (item.dealId) {
+    const existingDeal = await sendTRPCMessage({
+      subdomain,
+      pluginName: 'sales',
+      method: 'query',
+      module: 'deal',
+      action: 'findOne',
+      input: {
+        _id: item.dealId,
+      },
+      defaultValue: { data: null },
+    }).catch(() => ({ data: null }));
+
+    if (existingDeal?.data?._id) {
+      return existingDeal.data;
+    }
+  }
+
+  const conditions: Record<string, any>[] = [
+    { 'extraData.externalLeadKey': toLeadIdentity(item) },
+  ];
+
+  if (customerId) {
+    conditions.push({ 'extraData.customerId': customerId });
+  }
+
+  if (item.commentUserId) {
+    conditions.push({ 'extraData.douyinCommentUserId': item.commentUserId });
+  }
+
+  if (item.commentProfileUrl) {
+    conditions.push({ 'extraData.commentProfileUrl': item.commentProfileUrl });
+  }
+
+  if (item.sourcePostUrl) {
+    conditions.push({ 'extraData.sourcePostUrl': item.sourcePostUrl });
+  }
+
+  const deals = await sendTRPCMessage({
+    subdomain,
+    pluginName: 'sales',
+    method: 'query',
+    module: 'deal',
+    action: 'find',
+    input: {
+      query: {
+        status: 'active',
+        'extraData.source': 'douyin',
+        $or: conditions,
+      },
+      limit: 1,
+      sort: { updatedAt: -1 },
+    },
+    defaultValue: { data: [] },
+  }).catch(() => ({ data: [] }));
+
+  return deals?.data?.[0] || null;
+};
+
+const ensureCustomerDealRelation = async (
+  subdomain: string,
+  customerId?: string,
+  dealId?: string,
+) => {
+  if (!customerId || !dealId) {
+    return;
+  }
+
+  await sendTRPCMessage({
+    subdomain,
+    pluginName: 'core',
+    method: 'mutation',
+    module: 'relation',
+    action: 'createMultipleRelations',
+    input: {
+      relations: [
+        {
+          entities: [
+            { contentType: 'sales:deal', contentId: dealId },
+            { contentType: 'core:customer', contentId: customerId },
+          ],
+        },
+      ],
+    },
+    defaultValue: null,
+  }).catch(() => null);
+};
+
+const getStageDetail = async (subdomain: string, stageId?: string) => {
+  if (!stageId) {
+    return null;
+  }
+
+  const response = await sendTRPCMessage({
+    subdomain,
+    pluginName: 'sales',
+    method: 'query',
+    module: 'stage',
+    action: 'findOne',
+    input: {
+      _id: stageId,
+    },
+    defaultValue: { data: null },
+  }).catch(() => ({ data: null }));
+
+  return response?.data || null;
+};
+
+const getDealLink = async (subdomain: string, dealId?: string) => {
+  if (!dealId) {
+    return '';
+  }
+
+  const response = await sendTRPCMessage({
+    subdomain,
+    pluginName: 'sales',
+    method: 'query',
+    module: 'deal',
+    action: 'getLink',
+    input: {
+      _id: dealId,
+    },
+    defaultValue: { data: '' },
+  }).catch(() => ({ data: '' }));
+
+  return response?.data || '';
+};
+
+const upsertDealFromLead = async (
+  subdomain: string,
+  item: ILeadItem,
+  customerId: string | undefined,
+  stageId: string | undefined,
+  assignedUserIds: string[],
+) => {
+  const existingDeal = await findExistingDeal(subdomain, item, customerId);
+  const nextAssignedUserIds = uniqueStrings([
+    ...(existingDeal?.assignedUserIds || []),
+    ...assignedUserIds,
+  ]);
+  const dealInput = {
+    name:
+      existingDeal?.name ||
+      `[抖音线索] ${item.commentNickname || '匿名用户'} - ${
+        item.keyword || item.channel
+      }`,
+    customerIds: customerId ? [customerId] : [],
+    assignedUserIds: nextAssignedUserIds,
+    description: existingDeal?.description || buildLeadDescription(item),
+    extraData: buildDealExtraData(
+      item,
+      customerId,
+      existingDeal?.extraData || {},
+    ),
+  };
+
+  let dealId = existingDeal?._id;
+  let action: 'created' | 'updated' | undefined;
+  let effectiveStageId = existingDeal?.stageId || stageId;
+
+  if (!existingDeal && stageId) {
+    const createdDeal = await sendTRPCMessage({
+      subdomain,
+      pluginName: 'sales',
+      method: 'mutation',
+      module: 'deal',
+      action: 'create',
+      input: {
+        ...dealInput,
+        stageId,
+      },
+    }).catch(() => null);
+
+    dealId = createdDeal?.data?._id;
+    effectiveStageId = createdDeal?.data?.stageId || stageId;
+    action = dealId ? 'created' : undefined;
+  }
+
+  if (existingDeal?._id) {
+    await sendTRPCMessage({
+      subdomain,
+      pluginName: 'sales',
+      method: 'mutation',
+      module: 'deal',
+      action: 'updateOne',
+      input: {
+        selector: { _id: existingDeal._id },
+        modifier: {
+          assignedUserIds: nextAssignedUserIds,
+          description: dealInput.description,
+          extraData: dealInput.extraData,
+          name: dealInput.name,
+        },
+      },
+    }).catch(() => null);
+    action = 'updated';
+  }
+
+  await ensureCustomerDealRelation(subdomain, customerId, dealId);
+
+  const stage = await getStageDetail(subdomain, effectiveStageId);
+  const dealLink = await getDealLink(subdomain, dealId);
+
+  return {
+    dealId,
+    dealLink,
+    dealStageId: stage?._id || effectiveStageId || '',
+    dealStageName: stage?.name || '',
+    action,
+  };
 };
 
 const resolveSalesStage = async (subdomain: string) => {
@@ -298,7 +840,10 @@ export const syncJobItems = async (
   models: IModels,
   jobId: string,
 ): Promise<ISyncResult> => {
-  const items = await models.ChinaLeadItems.find({ jobId, syncStatus: 'pending' })
+  const items = await models.ChinaLeadItems.find({
+    jobId,
+    syncStatus: 'pending',
+  })
     .sort({ createdAt: 1 })
     .lean();
 
@@ -308,92 +853,69 @@ export const syncJobItems = async (
     synced: 0,
     skipped: 0,
     failed: 0,
+    createdCustomers: 0,
+    updatedCustomers: 0,
+    createdDeals: 0,
+    updatedDeals: 0,
     customerIds: [],
     dealIds: [],
   };
 
   const { stageId } = await resolveSalesStage(subdomain);
-  const assignedUserIds = parseIdList(process.env.CHINA_LEADS_ASSIGNED_USER_IDS);
+  const assignedUserIds = parseIdList(
+    process.env.CHINA_LEADS_ASSIGNED_USER_IDS,
+  );
 
   for (const item of items) {
     try {
       if (!item.commentNickname && !item.commentUserId && !item.commentText) {
         await models.ChinaLeadItems.updateOne(
           { _id: item._id },
-          { $set: { syncStatus: 'skipped', syncError: 'Missing lead content' } },
+          {
+            $set: { syncStatus: 'skipped', syncError: 'Missing lead content' },
+          },
         );
         result.skipped += 1;
         continue;
       }
 
-      const customer = await sendTRPCMessage({
-        subdomain,
-        pluginName: 'core',
-        method: 'mutation',
-        module: 'customers',
-        action: 'createCustomer',
-        input: {
-          doc: {
-            state: 'lead',
-            firstName: '',
-            lastName: '',
-            primaryPhone: '',
-            primaryEmail: '',
-            description: '抖音线索，待销售补充微信、电话和真实姓名。',
-            links: {
-              douyinProfile: item.commentProfileUrl || '',
-              douyinVideo: item.sourcePostUrl || '',
-            },
-            data: {
-              source: 'douyin',
-              sourceLabel: '抖音',
-              douyinNickname: item.commentNickname || '',
-              douyinProfileUrl: item.commentProfileUrl || '',
-              douyinVideoUrl: item.sourcePostUrl || '',
-              douyinCommentText: item.commentText || '',
-              douyinKeyword: item.keyword || '',
-              douyinPublishedAt: formatLeadTimestamp(item.sourceCreatedAt),
-            },
-          },
-        },
-      });
+      const leadTagIds = await ensureLeadTags(subdomain, item);
+      const { customer, action: customerSyncAction } =
+        await upsertCustomerFromLead(
+          subdomain,
+          item,
+          assignedUserIds,
+          leadTagIds,
+        );
 
-      const dealResponse = stageId
-        ? await sendTRPCMessage({
-            subdomain,
-            pluginName: 'sales',
-            method: 'mutation',
-            module: 'deal',
-            action: 'create',
-            input: {
-              name: `[抖音线索] ${item.commentNickname || '匿名用户'} - ${item.keyword || item.channel}`,
-              customerIds: customer?._id ? [customer._id] : [],
-              stageId,
-              assignedUserIds,
-              description: buildLeadDescription(item),
-              extraData: {
-                source: 'douyin',
-                sourceLabel: '抖音',
-                channel: item.channel,
-                commentNickname: item.commentNickname || '',
-                commentProfileUrl: item.commentProfileUrl || '',
-                sourcePostUrl: item.sourcePostUrl || '',
-                sourceCreatedAt: formatLeadTimestamp(item.sourceCreatedAt),
-                keyword: item.keyword || '',
-                funnelModel: [
-                  '抖音触达',
-                  '转微信',
-                  '电话沟通',
-                  '线下拜访',
-                  '成交',
-                ],
-              },
-            },
-          }).catch(() => null)
-        : null;
-
-      const dealId = dealResponse?.data?._id;
       const customerId = customer?._id;
+      const customerLink = getCustomerLink(customerId);
+      const customerOwnerId = customer?.ownerId || assignedUserIds[0] || '';
+      const customerTagIds = uniqueStrings(customer?.tagIds || leadTagIds);
+      const funnelStageKey =
+        customer?.data?.funnelStageKey || customer?.leadStatus || 'new';
+      const funnelStageLabel =
+        customer?.data?.funnelStageLabel ||
+        LEAD_STATUS_LABELS[customer?.leadStatus || 'new'] ||
+        LEAD_STATUS_LABELS.new;
+
+      const dealInfo = customerId
+        ? await upsertDealFromLead(
+            subdomain,
+            item,
+            customerId,
+            stageId,
+            assignedUserIds,
+          )
+        : {
+            dealId: '',
+            dealLink: '',
+            dealStageId: '',
+            dealStageName: '',
+            action: undefined,
+          };
+
+      const dealId = dealInfo.dealId;
 
       await models.ChinaLeadItems.updateOne(
         { _id: item._id },
@@ -402,13 +924,35 @@ export const syncJobItems = async (
             syncStatus: 'synced',
             syncError: '',
             customerId,
+            customerLink,
+            customerOwnerId,
+            customerTagIds,
+            customerSyncAction,
             dealId,
+            dealLink: dealInfo.dealLink,
+            dealStageId: dealInfo.dealStageId,
+            dealStageName: dealInfo.dealStageName,
+            dealSyncAction: dealInfo.action,
+            funnelStageKey,
+            funnelStageLabel,
             updatedAt: new Date(),
           },
         },
       );
 
       result.synced += 1;
+      if (customerSyncAction === 'created') {
+        result.createdCustomers += 1;
+      }
+      if (customerSyncAction === 'updated') {
+        result.updatedCustomers += 1;
+      }
+      if (dealInfo.action === 'created') {
+        result.createdDeals += 1;
+      }
+      if (dealInfo.action === 'updated') {
+        result.updatedDeals += 1;
+      }
       if (customerId) {
         result.customerIds.push(customerId);
       }

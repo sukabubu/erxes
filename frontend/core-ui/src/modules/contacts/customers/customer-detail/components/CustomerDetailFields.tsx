@@ -10,6 +10,7 @@ import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Can, useCustomerEdit } from 'ui-modules';
 import { useCustomerDetailWithQuery } from '../../hooks/useCustomerDetailWithQuery';
+import { CustomerDetailChinaLead } from './CustomerDetailChinaLead';
 
 export const CustomerDetailFields = () => {
   const { customerDetail } = useCustomerDetailWithQuery();
@@ -82,6 +83,9 @@ export const CustomerDetailFields = () => {
   return (
     <div className="py-8 space-y-6">
       <CustomerDetailSelectTag tagIds={tagIds || []} customerId={_id} />
+      <div className="px-8">
+        <CustomerDetailChinaLead />
+      </div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 px-8">
           <CustomerAddGeneralInformationFields form={form} />

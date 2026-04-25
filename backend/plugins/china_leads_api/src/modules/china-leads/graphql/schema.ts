@@ -65,7 +65,17 @@ export const types = `
     syncStatus: String!
     syncError: String
     customerId: String
+    customerLink: String
+    customerOwnerId: String
+    customerTagIds: [String!]
+    customerSyncAction: String
     dealId: String
+    dealLink: String
+    dealStageId: String
+    dealStageName: String
+    dealSyncAction: String
+    funnelStageKey: String
+    funnelStageLabel: String
     raw: JSON
   }
 
@@ -75,6 +85,10 @@ export const types = `
     synced: Int!
     skipped: Int!
     failed: Int!
+    createdCustomers: Int!
+    updatedCustomers: Int!
+    createdDeals: Int!
+    updatedDeals: Int!
     customerIds: [String!]!
     dealIds: [String!]!
   }
